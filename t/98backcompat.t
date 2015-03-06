@@ -6,7 +6,7 @@ use warnings;
 use Test::More;
 
 package OneOfParser;
-use base qw( Parser::MGC );
+use base qw( Parser::MGC::Tagged );
 
 sub parse
 {

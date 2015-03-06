@@ -7,7 +7,7 @@ use Test::More;
 use File::Temp qw( tempfile );
 
 package TestParser;
-use base qw( Parser::MGC );
+use base qw( Parser::MGC::Tagged );
 
 sub parse
 {

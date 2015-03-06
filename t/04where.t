@@ -9,7 +9,7 @@ my @positions;
 my @wheres;
 
 package TestParser;
-use base qw( Parser::MGC );
+use base qw( Parser::MGC::Tagged );
 
 sub parse
 {

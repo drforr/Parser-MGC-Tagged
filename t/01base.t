@@ -5,8 +5,10 @@ use warnings;
 
 use Test::More;
 
+$ENV{DEBUG} = 1;
+
 package TestParser;
-use base qw( Parser::MGC );
+use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
@@ -23,7 +25,7 @@ package main;
 my $parser = TestParser->new;
 
 isa_ok( $parser, "TestParser", '$parser' );
-isa_ok( $parser, "Parser::MGC", '$parser' );
+isa_ok( $parser, "Parser::MGC::Tagged", '$parser' );
 
 my $tokens = $parser->from_string( "1 2 3" );
 
