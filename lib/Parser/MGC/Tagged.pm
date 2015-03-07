@@ -18,6 +18,7 @@ $rv->{_depth_} = 0;
 sub from_string {
   my $self = shift;
 $self->{spaces} = { };
+$self->{tags} = [ ]; # There could be multiple tags starting at a given offset
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_string>\n";
@@ -279,10 +280,14 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_number<\n";
 
 sub token_string {
   my $self = shift;
+  my ( $tag_name, $tag_value ) = @_;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_string>\n";
+  my $start_pos = $self->pos;
   my $result = $self->SUPER::token_string( @_ );
+  my $end_pos = $self->pos;
+  push @{ $self->{tags} }, [ $start_pos, $end_pos, $tag_name, $tag_value ];
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_string<\n";
   return $result;
 }

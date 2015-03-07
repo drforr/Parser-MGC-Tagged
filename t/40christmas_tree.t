@@ -142,8 +142,14 @@ is_deeply(
   ],
   "(Christmas Tree test)"
 );
+
 is_deeply( $parser->{spaces},
   { 1 => 2, 5 => 6, 9 => 10, 13 => 14, 22 => 23, 28 => 29, 36 => 37, 44 => 45, 46 => 47, 53 => 54, 62 => 63, 65 => 66, 67 => 68, 69 => 70, 71 => 72, 73 => 74, 75 => 76, 78 => 79, 80 => 81, 82 => 83  },
   q("$parse_me" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 13, 22, String_5 => 1 ],
+    [ 46, 53, String_11 => 1 ],
+    [ 53, 62, String_13 => 1 ] ],
+  q("$parse_me" tags) );
 
 done_testing;

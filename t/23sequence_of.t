@@ -29,7 +29,7 @@ sub parse
       } ),
 
       $self->sequence_of( sub {
-         return $self->token_string;
+         return $self->token_string( String => 1 );
       } ),
    ];
 }
@@ -56,17 +56,24 @@ is_deeply( $parser->from_string( "10 20 'ab' 'cd'" ),
 is_deeply( $parser->{spaces},
   { 2 => 3, 5 => 6, 10 => 11 },
   q("10 20 'ab' 'cd'" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 5, 10, String => 1 ], [ 10, 15, String => 1 ] ],
+  q("10 20 'ab' 'cd'" tags) );
 
 is_deeply( $parser->from_string( "10 20" ),
            [ [ 10, 20 ], [] ], q("10 20") );
 is_deeply( $parser->{spaces},
   { 2 => 3 },
   q("10 20" spaces) );
+is_deeply( $parser->{tags}, [ ], q("10 20" tags) );
 
 is_deeply( $parser->from_string( "'ab' 'cd'" ),
            [ [], [ 'ab', 'cd' ] ], q("'ab' 'cd'") );
 is_deeply( $parser->{spaces},
   { 4 => 5 },
   q("'ab' 'cd'" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 4, String => 1 ], [ 4, 9, String => 1 ] ],
+  q("'ab' 'cd'" tags) );
 
 done_testing;

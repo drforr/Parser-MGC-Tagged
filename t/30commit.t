@@ -18,7 +18,7 @@ sub parse
          $self->scope_of( "(",
             sub {
                $self->commit;
-               $self->token_string;
+               $self->token_string( String => 1 );
             },
             ")" );
       }
@@ -36,7 +36,7 @@ sub parse
       my $int = $self->token_int;
       $self->commit;
 
-      my $str = $self->token_string;
+      my $str = $self->token_string( String => 1 );
 
       [ $int, $str ];
    } );
@@ -49,8 +49,13 @@ my $parser = TestParser->new;
 
 is( $parser->from_string( "123" ), 123, '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
+is_deeply( $parser->{tags}, [ ], q("123" tags) );
+
 is( $parser->from_string( '("hi")' ), "hi", '("hi")' );
 is_deeply( $parser->{spaces}, { }, q['("hi")' spaces] );
+is_deeply( $parser->{tags},
+  [ [ 1, 5, String => 1 ] ],
+  q['("hi")' tags] );
 
 ok( !eval { $parser->from_string( "(456)" ) }, '"(456)" fails' );
 is( $@,
@@ -67,6 +72,9 @@ is_deeply( $parser->from_string( "1 'one' 2 'two'" ),
 is_deeply( $parser->{spaces},
   { 1 => 2, 7 => 8, 9 => 10 },
   q("1 'one' 2 'two'" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 1, 7, String => 1 ], [ 9, 15, String => 1 ] ],
+  q("1 'one' 2 'two'" tags) );
 
 ok( !eval { $parser->from_string( "1 'one' 2" ) }, "1 'one' 2 fails" );
 is( $@,
