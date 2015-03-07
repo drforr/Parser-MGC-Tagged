@@ -14,7 +14,7 @@ sub parse
 
    $self->one_of(
       sub { [ int => $self->token_int( Int => 1 ) ] },
-      sub { [ str => $self->token_string ] },
+      sub { [ str => $self->token_string( String => 1 ) ] },
    );
 }
 
@@ -28,7 +28,6 @@ is_deeply( $parser->{tags}, [ [ 0, 3, Int => 1 ] ], q("123" tags) );
 
 is_deeply( $parser->from_string( q["hi"] ), [ str => "hi" ], 'one_of string' );
 is_deeply( $parser->{spaces}, { }, q(q["hi"] spaces) );
-is_deeply( $parser->{tags}, [ ], q(q["hi"] tags) );
-use YAML;die Dump($parser->{tags});
+is_deeply( $parser->{tags}, [ [ 0, 4, String => 1 ] ], q(q["hi"] tags) );
 
 done_testing;

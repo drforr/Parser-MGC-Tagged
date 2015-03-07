@@ -16,7 +16,7 @@ sub parse
 
    $self->maybe( sub {
       die $die if $die;
-      $self->token_ident;
+      $self->token_ident( Ident => 1 );
    } ) ||
       $self->token_int( Int => 1 );
 }
@@ -28,6 +28,7 @@ my $parser = TestParser->new;
 
 is( $parser->from_string( "hello" ), "hello", '"hello"' );
 is_deeply( $parser->{spaces}, { }, q("hello" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 5, Ident => 1 ] ], q("hello" tags) );
 
 is( $parser->from_string( "123" ), 123, '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
