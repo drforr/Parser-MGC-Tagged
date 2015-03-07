@@ -13,7 +13,7 @@ sub parse
    my $self = shift;
 
    $self->any_of(
-      sub { $self->token_int },
+      sub { $self->token_int( Int => 1 ) },
       sub {
          $self->scope_of( "(",
             sub {
@@ -33,7 +33,7 @@ sub parse
    my $self = shift;
 
    $self->sequence_of( sub {
-      my $int = $self->token_int;
+      my $int = $self->token_int( Int => 1 );
       $self->commit;
 
       my $str = $self->token_string( String => 1 );
@@ -49,7 +49,7 @@ my $parser = TestParser->new;
 
 is( $parser->from_string( "123" ), 123, '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags}, [ ], q("123" tags) );
+is_deeply( $parser->{tags}, [ [ 0, 3, Int => 1 ] ], q("123" tags) );
 
 is( $parser->from_string( '("hi")' ), "hi", '("hi")' );
 is_deeply( $parser->{spaces}, { }, q['("hi")' spaces] );
@@ -73,7 +73,10 @@ is_deeply( $parser->{spaces},
   { 1 => 2, 7 => 8, 9 => 10 },
   q("1 'one' 2 'two'" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 1, 7, String => 1 ], [ 9, 15, String => 1 ] ],
+  [ [ 0, 1, Int => 1 ],
+    [ 1, 7, String => 1 ],
+    [ 7, 9, Int => 1 ],
+    [ 9, 15, String => 1 ] ],
   q("1 'one' 2 'two'" tags) );
 
 ok( !eval { $parser->from_string( "1 'one' 2" ) }, "1 'one' 2 fails" );

@@ -147,12 +147,19 @@ is_deeply( $parser->{spaces},
   { 1 => 2, 5 => 6, 9 => 10, 13 => 14, 22 => 23, 28 => 29, 36 => 37, 44 => 45, 46 => 47, 53 => 54, 62 => 63, 65 => 66, 67 => 68, 69 => 70, 71 => 72, 73 => 74, 75 => 76, 78 => 79, 80 => 81, 82 => 83  },
   q("$parse_me" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 13, 22, String_5 => 1 ],
+  [ [ 0, 1, Int_1 => 1 ],
+    [ 13, 22, String_5 => 1 ],
     [ 36, 44, Generic_Token_8 => 1 ],
+    [ 44, 46, Int_9 => 1 ],
     [ 46, 53, String_11 => 1 ],
     [ 53, 62, String_13 => 1 ],
+    [ 62, 64, Int_14 => 1 ],
+    [ 65, 67, Int_14 => 1 ],
+    [ 73, 75, Int_16 => 1 ],
+    [ 75, 78, Int_16 => 1 ],
     [ 82, 83, Maybe_Expect_20 => 1 ],
     [ 83, 84, Maybe_Expect_21 => 1 ] ],
   q("$parse_me" tags) );
+use YAML;die Dump($parser->{tags});
 
 done_testing;

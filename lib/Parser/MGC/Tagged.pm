@@ -244,6 +244,12 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "substring_before<\n";
 sub generic_token {
   my $self = shift;
   my ( $ignored1, $ignored2, $ignored3, $tag_name, $tag_value ) = @_;
+  if ( defined $self->{tag_name} ) {
+    $tag_name = $self->{tag_name};
+  }
+  if ( defined $self->{tag_value} ) {
+    $tag_value = $self->{tag_value};
+  }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "generic_token>\n";
@@ -270,6 +276,9 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "_token_generic<\n";
 
 sub token_int {
   my $self = shift;
+  my ( $tag_name, $tag_value ) = @_;
+  local $self->{tag_name} = $tag_name;
+  local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_int>\n";

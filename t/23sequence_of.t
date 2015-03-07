@@ -13,7 +13,7 @@ sub parse
    my $self = shift;
 
    $self->sequence_of( sub {
-      return $self->token_int;
+      return $self->token_int( Int => 1 );
    } );
 }
 
@@ -25,7 +25,7 @@ sub parse
    my $self = shift;
 
    [ $self->sequence_of( sub {
-         return $self->token_int;
+         return $self->token_int( Int => 1 );
       } ),
 
       $self->sequence_of( sub {
@@ -45,9 +45,13 @@ is_deeply( $parser->from_string( "4 5 6" ), [ 4, 5, 6 ], '"4 5 6"' );
 is_deeply( $parser->{spaces},
   { 1 => 2, 3 => 4 },
   q("4 5 6" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 1, Int => 1 ], [ 1, 3, Int => 1 ], [ 3, 5, Int => 1 ] ],
+  q("4 5 6" tags) );
 
 is_deeply( $parser->from_string( "" ), [], '""' );
 is_deeply( $parser->{spaces}, { }, q("" spaces) );
+is_deeply( $parser->{tags}, [ ], q("" tags) );
 
 $parser = IntThenStringParser->new;
 
@@ -57,7 +61,8 @@ is_deeply( $parser->{spaces},
   { 2 => 3, 5 => 6, 10 => 11 },
   q("10 20 'ab' 'cd'" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 5, 10, String => 1 ], [ 10, 15, String => 1 ] ],
+  [ [ 0, 2, Int => 1 ], [ 2, 5, Int => 1 ],
+    [ 5, 10, String => 1 ], [ 10, 15, String => 1 ] ],
   q("10 20 'ab' 'cd'" tags) );
 
 is_deeply( $parser->from_string( "10 20" ),
@@ -65,7 +70,7 @@ is_deeply( $parser->from_string( "10 20" ),
 is_deeply( $parser->{spaces},
   { 2 => 3 },
   q("10 20" spaces) );
-is_deeply( $parser->{tags}, [ ], q("10 20" tags) );
+is_deeply( $parser->{tags}, [ [ 0, 2, Int => 1 ], [ 2, 5, Int => 1 ] ], q("10 20" tags) );
 
 is_deeply( $parser->from_string( "'ab' 'cd'" ),
            [ [], [ 'ab', 'cd' ] ], q("'ab' 'cd'") );
