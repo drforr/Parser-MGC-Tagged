@@ -302,6 +302,9 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_float<\n";
 
 sub token_number {
   my $self = shift;
+  my ( $tag_name, $tag_value ) = @_;
+  local $self->{tag_name} = $tag_name;
+  local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_number>\n";

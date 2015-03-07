@@ -12,7 +12,7 @@ sub parse
 {
    my $self = shift;
 
-   return $self->token_number;
+   return $self->token_number( Number => 1 );
 }
 
 package main;
@@ -31,16 +31,27 @@ sub approx
 
 is( $parser->from_string( "123" ), 123, 'Decimal integer' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 3, Number => 1 ] ], q("123" tags) );
+
 approx( $parser->from_string( "123.0" ), 123,    'Decimal integer' );
 is_deeply( $parser->{spaces}, { }, q("123.0" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 5, Number => 1 ] ], q("123.0" tags) );
+
 approx( $parser->from_string( "0.0" ),     0,    'Zero' );
 is_deeply( $parser->{spaces}, { }, q("0.0" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 3, Number => 1 ] ], q("0.0" tags) );
+
 approx( $parser->from_string( "12." ),    12,    'Trailing DP' );
 is_deeply( $parser->{spaces}, { }, q("12" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 3, Number => 1 ] ], q("12" tags) );
+
 approx( $parser->from_string( ".34" ),     0.34, 'Leading DP' );
 is_deeply( $parser->{spaces}, { }, q(".34" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 3, Number => 1 ] ], q(".34" tags) );
+
 approx( $parser->from_string( "8.9" ),     8.9,  'Infix DP' );
 is_deeply( $parser->{spaces}, { }, q("8.9" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 3, Number => 1 ] ], q("8.9" tags) );
 
 ok( !eval { $parser->from_string( "hello" ) }, '"hello" fails' );
 
