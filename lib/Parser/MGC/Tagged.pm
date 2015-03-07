@@ -243,10 +243,17 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "substring_before<\n";
 
 sub generic_token {
   my $self = shift;
+  my ( $ignored1, $ignored2, $ignored3, $tag_name, $tag_value ) = @_;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "generic_token>\n";
+  my $start_pos = $self->pos;
   my $result = $self->SUPER::generic_token( @_ );
+  my $end_pos = $self->pos;
+  if ( $start_pos != $end_pos ) {
+    push @{ $self->{tags} },
+      [ $start_pos, $end_pos, $tag_name, $tag_value ];
+  }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "generic_token<\n";
   return $result;
 }

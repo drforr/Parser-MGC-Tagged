@@ -59,7 +59,7 @@ sub parse {
 
     # 'generic'
     $self->generic_token( generic => qr/generic/, sub { $_[1] },
-      ( Generic_8 => 1 )
+      ( Generic_Token_8 => 1 )
     ),
 
     # '5'
@@ -148,10 +148,11 @@ is_deeply( $parser->{spaces},
   q("$parse_me" spaces) );
 is_deeply( $parser->{tags},
   [ [ 13, 22, String_5 => 1 ],
+    [ 36, 44, Generic_Token_8 => 1 ],
     [ 46, 53, String_11 => 1 ],
-    [ 53, 62, String_13 => 1 ] ],
+    [ 53, 62, String_13 => 1 ],
     [ 82, 83, Maybe_Expect_20 => 1 ],
-    [ 83, 84, Maybe_Expect_21 => 1 ],
+    [ 83, 84, Maybe_Expect_21 => 1 ] ],
   q("$parse_me" tags) );
 
 done_testing;
