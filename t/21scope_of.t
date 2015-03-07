@@ -20,7 +20,7 @@ sub parse
 }
 
 package DynamicDelimParser;
-use base qw( Parser::MGC );
+use base qw( Parser::MGC::Tagged );
 
 sub parse
 {

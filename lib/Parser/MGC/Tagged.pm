@@ -180,13 +180,14 @@ sub maybe_expect {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
   if ( wantarray ) {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
     my @result = $self->SUPER::maybe_expect( @_ );
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect A<\n";
     return @result;
   }
   else {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
     my $result = $self->SUPER::maybe_expect( @_ );
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect S<\n";
     return $result;
@@ -197,13 +198,14 @@ sub expect {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect>\n";
   if ( wantarray ) {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect>\n";
     my @result = $self->SUPER::expect( @_ );
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect a<\n";
     return @result;
   }
   else {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect>\n";
     my $result = $self->SUPER::expect( @_ );
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect S<\n";
     return $result;

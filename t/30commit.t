@@ -26,7 +26,7 @@ sub parse
 }
 
 package IntStringPairsParser;
-use base qw( Parser::MGC );
+use base qw( Parser::MGC::Tagged );
 
 sub parse
 {

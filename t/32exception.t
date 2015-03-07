@@ -21,7 +21,7 @@ package main;
 my $parser = TestParser->new;
 
 isa_ok( $parser, "TestParser", '$parser' );
-isa_ok( $parser, "Parser::MGC", '$parser' );
+isa_ok( $parser, "Parser::MGC::Tagged", '$parser' );
 
 my $value = $parser->from_string( "\t123" );
 
