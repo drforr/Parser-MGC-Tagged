@@ -12,12 +12,12 @@ sub new {
   my $class = shift;
   my $rv = $class->SUPER::new( @_ );
 $rv->{_depth_} = 0;
-$rv->{tags} = [ ];
   return $rv;
 }
 
 sub from_string {
   my $self = shift;
+$self->{spaces} = { };
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_string>\n";
@@ -171,7 +171,12 @@ sub skip_ws {
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws>\n";
+  my $start_pos = $self->pos;
   my $result = $self->SUPER::skip_ws( @_ );
+  my $end_pos = $self->pos;
+  if ( $start_pos != $end_pos ) {
+    $self->{spaces}{$start_pos} = $end_pos;
+  }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws<\n";
   return $result;
 }

@@ -21,12 +21,16 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
 is_deeply( $parser->from_string( "123" ), [ int => 123 ], '"123"' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
 is_deeply( $parser->from_string( q["hi"] ), [ str => "hi" ], '"hi"' );
+is_deeply( $parser->{spaces}, { }, q("hi" spaces) );
 is_deeply( $parser->from_string( "foobar" ), [ ident => "foobar" ], '"foobar"' );
+is_deeply( $parser->{spaces}, { }, q("foobar" spaces) );
 
 ok( !eval { $parser->from_string( "@" ) }, '"@" fails' );
 is( $@, "Here I fail\n", 'Exception from "@" failure' );

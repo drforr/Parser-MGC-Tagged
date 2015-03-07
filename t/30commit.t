@@ -43,11 +43,14 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
 is( $parser->from_string( "123" ), 123, '"123"' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
 is( $parser->from_string( '("hi")' ), "hi", '("hi")' );
+is_deeply( $parser->{spaces}, { }, q['("hi")' spaces] );
 
 ok( !eval { $parser->from_string( "(456)" ) }, '"(456)" fails' );
 is( $@,
@@ -61,6 +64,9 @@ $parser = IntStringPairsParser->new;
 is_deeply( $parser->from_string( "1 'one' 2 'two'" ),
            [ [ 1, "one" ], [ 2, "two" ] ],
            "1 'one' 2 'two'" );
+is_deeply( $parser->{spaces},
+  { 1 => 2, 7 => 8, 9 => 10 },
+  q("1 'one' 2 'two'" spaces) );
 
 ok( !eval { $parser->from_string( "1 'one' 2" ) }, "1 'one' 2 fails" );
 is( $@,

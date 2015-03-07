@@ -23,6 +23,8 @@ package main;
 my $parser = OneOfParser->new;
 
 is_deeply( $parser->from_string( "123" ), [ int => 123 ], 'one_of integer' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
 is_deeply( $parser->from_string( q["hi"] ), [ str => "hi" ], 'one_of string' );
+is_deeply( $parser->{spaces}, { }, q(q["hi"] spaces) );
 
 done_testing;

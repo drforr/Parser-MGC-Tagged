@@ -16,12 +16,15 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
 is( $parser->from_string( "foo" ), "foo", 'Identifier' );
+is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
 
 is( $parser->from_string( "x" ), "x", 'Single-letter identifier' );
+is_deeply( $parser->{spaces}, { }, q("x" spaces) );
 
 ok( !eval { $parser->from_string( "123" ) }, '"123" fails' );
 is( $@,
@@ -37,5 +40,6 @@ $parser = TestParser->new(
 );
 
 is( $parser->from_string( "some-ident" ), "some-ident", '"some-ident" passes with new token pattern' );
+is_deeply( $parser->{spaces}, { }, q("some-ident" spaces) );
 
 done_testing;

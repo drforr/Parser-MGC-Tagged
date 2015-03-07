@@ -17,6 +17,7 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
@@ -26,6 +27,7 @@ isa_ok( $parser, "Parser::MGC::Tagged", '$parser' );
 my $value = $parser->from_string( "\t123" );
 
 is( $value, 123, '->from_string' );
+is_deeply( $parser->{spaces}, { 0 => 1 }, q("\t123" spaces) );
 
 ok( !eval { $parser->from_string( "\t123." ) }, 'Trailing input on string fails' );
 is( $@,

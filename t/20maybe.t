@@ -22,11 +22,14 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
 is( $parser->from_string( "hello" ), "hello", '"hello"' );
+is_deeply( $parser->{spaces}, { }, q("hello" spaces) );
 is( $parser->from_string( "123" ), 123, '"123"' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
 
 $die = "Now have to fail\n";
 ok( !eval { $parser->from_string( "456" ) }, '"456" with $die fails' );

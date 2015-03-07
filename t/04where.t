@@ -42,6 +42,7 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG}=1;
 
 my $parser = TestParser->new;
 
@@ -51,6 +52,9 @@ my $parser = TestParser->new;
    [ 1, 5, "hello world" ],
    [ 1, 11, "hello world" ], );
 $parser->from_string( "hello world" );
+is_deeply( $parser->{spaces},
+  { 5 => 6 },
+  q("hello world") );
 
 @positions = ( 0, 5, 11 );
 @wheres = (
@@ -58,5 +62,8 @@ $parser->from_string( "hello world" );
    [ 1, 5, "hello" ],
    [ 2, 5, "world" ], );
 $parser->from_string( "hello\nworld" );
+is_deeply( $parser->{spaces},
+  { 5 => 6 },
+  q("hello\nworld") );
 
 done_testing;

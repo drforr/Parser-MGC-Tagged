@@ -131,6 +131,7 @@ my $parser = ChristmasTree->new;
 #
 # All Parser::MGC base methods in a single invocation
 #
+#1 2.3 2.0 0x4 'string' ident keyword generic 5 'fail' 'commit' 6, 7 ( 8 ) 9 10 a b c";
 my $parse_me = 
   "1 2.3 2.0 0x4 'string' ident keyword generic 5 'fail' 'commit' 6, 7 ( 8 ) 9 10 a b c";
 is_deeply(
@@ -141,5 +142,8 @@ is_deeply(
   ],
   "(Christmas Tree test)"
 );
+is_deeply( $parser->{spaces},
+  { 1 => 2, 5 => 6, 9 => 10, 13 => 14, 22 => 23, 28 => 29, 36 => 37, 44 => 45, 46 => 47, 53 => 54, 62 => 63, 65 => 66, 67 => 68, 69 => 70, 71 => 72, 73 => 74, 75 => 76, 78 => 79, 80 => 81, 82 => 83  },
+  q("$parse_me" spaces) );
 
 done_testing;

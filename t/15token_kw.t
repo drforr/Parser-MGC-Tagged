@@ -16,10 +16,12 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
 is( $parser->from_string( "foo" ), "foo", 'Keyword' );
+is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
 
 ok( !eval { $parser->from_string( "splot" ) }, '"splot" fails' );
 is( $@,

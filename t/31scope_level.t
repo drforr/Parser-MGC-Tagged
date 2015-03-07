@@ -23,11 +23,17 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
 is_deeply( $parser->from_string( "a" ), [ "a/0" ], 'a' );
+is_deeply( $parser->{spaces}, { }, q("a" spaces) );
 is_deeply( $parser->from_string( "(b)" ), [ [ "b/1" ] ], '(b)' );
+is_deeply( $parser->{spaces}, { }, q("(b)" spaces) );
 is_deeply( $parser->from_string( "c (d) e" ), [ "c/0", [ "d/1" ], "e/0" ], 'c (d) e' );
+is_deeply( $parser->{spaces},
+  { 1 => 2, 5 => 6 },
+  q("c (d) e" spaces) );
 
 done_testing;

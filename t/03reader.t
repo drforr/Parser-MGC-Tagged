@@ -19,6 +19,7 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG}=1;
 
 my $parser = TestParser->new;
 
@@ -31,5 +32,10 @@ my @strings = (
 is_deeply( $parser->from_reader( sub { return shift @strings } ),
    [qw( here is a list of some more tokens )],
    'tokens from reader' );
+is_deeply( $parser->{spaces},
+  { 4 => 5, 7 => 8, 9 => 10, # "here is a list "
+    14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
+  },
+  q("here is a list", "of some more ", "tokens" spaces) );
 
 done_testing;
