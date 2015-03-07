@@ -31,11 +31,13 @@ my $tokens = $parser->from_string( "1 2 3" );
 
 is_deeply( $tokens, [ 1, 2, 3 ], '->from_string' );
 is_deeply( $parser->{spaces}, { }, q("1 2 3" spaces) );
+is_deeply( $parser->{tags}, [ ], q("1 2 3" tags) );
 
 $tokens = $parser->from_file( \*DATA );
 
 is_deeply( $tokens, [ 4, 5, 6 ], '->from_file(\*DATA)' );
 is_deeply( $parser->{spaces}, { }, q("4 5 6" spaces) );
+is_deeply( $parser->{tags}, [ ], q("4 5 6" tags) );
 
 done_testing;
 

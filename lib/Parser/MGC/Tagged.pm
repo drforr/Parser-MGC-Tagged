@@ -184,17 +184,30 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws<\n";
 
 sub maybe_expect {
   my $self = shift;
+  my ( $ignored, $tag_name, $tag_value ) = @_;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
+    my $start_pos = $self->pos;
     my @result = $self->SUPER::maybe_expect( @_ );
+    my $end_pos = $self->pos;
+    if ( $start_pos != $end_pos ) {
+      push @{ $self->{tags} },
+        [ $start_pos, $end_pos, $tag_name, $tag_value ];
+    }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect A<\n";
     return @result;
   }
   else {
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
+    my $start_pos = $self->pos;
     my $result = $self->SUPER::maybe_expect( @_ );
+    my $end_pos = $self->pos;
+    if ( $start_pos != $end_pos ) {
+      push @{ $self->{tags} },
+        [ $start_pos, $end_pos, $tag_name, $tag_value ];
+    }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect S<\n";
     return $result;
   }

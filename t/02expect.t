@@ -26,15 +26,15 @@ sub parse_foo_or_bar
 {
    my $self = shift;
 
-   return $self->maybe_expect( qr/foo/i ) ||
-          $self->maybe_expect( qr/bar/i );
+   return $self->maybe_expect( qr/foo/i, Maybe_Expect_1 => 1 ) ||
+          $self->maybe_expect( qr/bar/i, Maybe_Expect_2 => 1 );
 }
 
 sub parse_numrange
 {
    my $self = shift;
 
-   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/ ) )[1,2] ];
+   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/, Maybe_Expect => 1 ) )[1,2] ];
 }
 
 package main;
@@ -78,8 +78,15 @@ $parser = TestParser->new( toplevel => "parse_foo_or_bar" );
 
 is( $parser->from_string( "Foo" ), "Foo", "FooBar parser first case" );
 is_deeply( $parser->{spaces}, { }, q("Foo" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Maybe_Expect_1 => 1 ] ],
+  q("Foo" tags) );
+
 is( $parser->from_string( "Bar" ), "Bar", "FooBar parser first case" );
 is_deeply( $parser->{spaces}, { }, q("Bar" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Maybe_Expect_2 => 1 ] ],
+  q("Bar" tags) );
 
 $parser = TestParser->new( toplevel => "parse_numrange" );
 

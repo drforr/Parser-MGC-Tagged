@@ -150,6 +150,8 @@ is_deeply( $parser->{tags},
   [ [ 13, 22, String_5 => 1 ],
     [ 46, 53, String_11 => 1 ],
     [ 53, 62, String_13 => 1 ] ],
+    [ 82, 83, Maybe_Expect_20 => 1 ],
+    [ 83, 84, Maybe_Expect_21 => 1 ],
   q("$parse_me" tags) );
 
 done_testing;
