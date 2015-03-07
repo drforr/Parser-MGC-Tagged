@@ -148,6 +148,8 @@ is_deeply( $parser->{spaces},
   q("$parse_me" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Int_1 => 1 ],
+    [ 1, 5, Float_2 => 1 ],
+    [ 5, 9, Float_3 => 1 ],
     [ 13, 22, String_5 => 1 ],
     [ 36, 44, Generic_Token_8 => 1 ],
     [ 44, 46, Int_9 => 1 ],
