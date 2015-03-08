@@ -59,7 +59,7 @@ sub parse {
 
     # 'generic'
     $self->generic_token( generic => qr/generic/, sub { $_[1] },
-      ( Generic_Token_8 => 1 )
+      [ Generic_Token_8 => 1 ]
     ),
 
     # '5'
@@ -93,7 +93,7 @@ sub parse {
     # scope_of() calls expect() internally, so call it inside.
     $self->scope_of(
         '(',
-        sub { $self->expect( '8', Expect_15 => 1 ) },
+        sub { $self->expect( '8', [ Expect_15 => 1 ] ) },
         ')'
     ),
 
@@ -116,11 +116,11 @@ sub parse {
 
     # ''
     # maybe_expect() on its own failing
-    $self->maybe_expect( 'b', Maybe_Expect_20 => 1 ),
+    $self->maybe_expect( 'b', [ Maybe_Expect_20 => 1 ] ),
 
     # 'c'
     # maybe_expect() passing
-    $self->maybe_expect( 'c', Maybe_Expect_21 => 1 ),
+    $self->maybe_expect( 'c', [ Maybe_Expect_21 => 1 ] ),
   ]
 }
 

@@ -26,15 +26,15 @@ sub parse_foo_or_bar
 {
    my $self = shift;
 
-   return $self->maybe_expect( qr/foo/i, Maybe_Expect_1 => 1 ) ||
-          $self->maybe_expect( qr/bar/i, Maybe_Expect_2 => 1 );
+   return $self->maybe_expect( qr/foo/i, [ Maybe_Expect_1 => 1 ] ) ||
+          $self->maybe_expect( qr/bar/i, [ Maybe_Expect_2 => 1 ] );
 }
 
 sub parse_numrange
 {
    my $self = shift;
 
-   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/, Maybe_Expect => 1 ) )[1,2] ];
+   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/, [ Maybe_Expect => 1 ] ) )[1,2] ];
 }
 
 package main;

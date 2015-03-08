@@ -184,7 +184,10 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws<\n";
 
 sub maybe_expect {
   my $self = shift;
-  my ( $ignored, $tag_name, $tag_value ) = @_;
+  my ( $tag_name, $tag_value );
+  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
+    ( $tag_name, $tag_value ) = @{ $_[-1] };
+  }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {
@@ -192,7 +195,7 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
     my $start_pos = $self->pos;
     my @result = $self->SUPER::maybe_expect( @_ );
     my $end_pos = $self->pos;
-    if ( $start_pos != $end_pos ) {
+    if ( defined $tag_name and $start_pos != $end_pos ) {
       push @{ $self->{tags} },
         [ $start_pos, $end_pos, $tag_name, $tag_value ];
     }
@@ -243,7 +246,10 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "substring_before<\n";
 
 sub generic_token {
   my $self = shift;
-  my ( $ignored1, $ignored2, $ignored3, $tag_name, $tag_value ) = @_;
+  my ( $tag_name, $tag_value );
+  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
+    ( $tag_name, $tag_value ) = @{ $_[-1] };
+  }
   if ( !defined $tag_name ) {
     $tag_name = $self->{tag_name};
     $tag_value = $self->{tag_value};

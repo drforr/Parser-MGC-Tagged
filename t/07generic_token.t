@@ -15,7 +15,8 @@ sub parse
 {
    my $self = shift;
 
-   return $self->generic_token( token => $re, $convert, Generic_Token => 1 );
+   return $self->generic_token(
+     token => $re, $convert, [ Generic_Token => 1 ] );
 }
 
 package main;

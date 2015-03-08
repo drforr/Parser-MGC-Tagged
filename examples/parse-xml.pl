@@ -77,7 +77,7 @@ sub parse_tag
 
    my $attrs = $self->sequence_of( \&parse_tag_attr );
 
-   my $selfclose = $self->maybe_expect( '/', Maybe_Expect => 1 );
+   my $selfclose = $self->maybe_expect( '/', [ Maybe_Expect => 1 ] );
    $self->expect( '>' );
 
    return {
