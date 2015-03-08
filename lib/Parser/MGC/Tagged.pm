@@ -244,10 +244,8 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "substring_before<\n";
 sub generic_token {
   my $self = shift;
   my ( $ignored1, $ignored2, $ignored3, $tag_name, $tag_value ) = @_;
-  if ( defined $self->{tag_name} ) {
+  if ( !defined $tag_name ) {
     $tag_name = $self->{tag_name};
-  }
-  if ( defined $self->{tag_value} ) {
     $tag_value = $self->{tag_value};
   }
 
@@ -330,6 +328,10 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_string<\n";
 sub token_ident {
   my $self = shift;
   my ( $tag_name, $tag_value ) = @_;
+  if ( !defined $tag_name ) {
+    $tag_name = $self->{tag_name};
+    $tag_value = $self->{tag_value};
+  }
   local $self->{tag_name} = $tag_name;
   local $self->{tag_value} = $tag_value;
 
@@ -342,10 +344,13 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_ident<\n";
 
 sub token_kw {
   my $self = shift;
+  my ( $tag_name, $tag_value ) = @{ $_[-1] };
+  local $self->{tag_name} = $tag_name;
+  local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_kw>\n";
-  my $result = $self->SUPER::token_kw( @_ );
+  my $result = $self->SUPER::token_kw( @_[ 0 .. $#_ - 1 ] );
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_kw<\n";
   return $result;
 }

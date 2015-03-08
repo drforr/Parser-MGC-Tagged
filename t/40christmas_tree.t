@@ -55,7 +55,7 @@ sub parse {
     $self->token_ident ( Ident_6 => 1 ),
 
     # 'keyword'
-    $self->token_kw( qw( keyword ), ( Keyword_7 => 1 ) ),
+    $self->token_kw( qw( keyword ), [ Keyword_7 => 1 ] ),
 
     # 'generic'
     $self->generic_token( generic => qr/generic/, sub { $_[1] },
