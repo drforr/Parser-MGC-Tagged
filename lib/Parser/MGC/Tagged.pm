@@ -188,6 +188,10 @@ sub maybe_expect {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ $_[-1] };
   }
+  if ( !defined $tag_name ) {
+    $tag_name = $self->{tag_name};
+    $tag_value = $self->{tag_value};
+  }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {
@@ -218,6 +222,12 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect S<\n";
 
 sub expect {
   my $self = shift;
+  my ( $tag_name, $tag_value );
+  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
+    ( $tag_name, $tag_value ) = @{ $_[-1] };
+  }
+  local $self->{tag_name} = $tag_name;
+  local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {

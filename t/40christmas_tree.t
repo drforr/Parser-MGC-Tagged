@@ -108,11 +108,11 @@ sub parse {
 
     # 'a'
     # maybe() passing
-    $self->maybe( sub { $self->expect( 'a', Expect_18 => 1 ) } ),
+    $self->maybe( sub { $self->expect( 'a', [ Expect_18 => 1 ] ) } ),
 
     # 'b'
     # expect() on its own.
-    $self->expect( 'b', Expect_19 => 1 ),
+    $self->expect( 'b', [ Expect_19 => 1 ] ),
 
     # ''
     # maybe_expect() on its own failing

@@ -13,7 +13,7 @@ sub parse
    my $self = shift;
 
    my @tokens;
-   push @tokens, $self->expect( qr/[a-z]+/ ) while !$self->at_eos;
+   push @tokens, $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) while !$self->at_eos;
 
    return \@tokens;
 }
@@ -37,5 +37,16 @@ is_deeply( $parser->{spaces},
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
   },
   q("here is a list", "of some more ", "tokens" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 4, Expect => 1 ],
+    [ 4, 7, Expect => 1 ],
+    [ 7, 9, Expect => 1 ],
+    [ 9, 14, Expect => 1 ], # "here is a list "
+    [ 14, 17, Expect => 1 ],
+    [ 17, 22, Expect => 1 ],
+    [ 22, 27, Expect => 1 ], # "of some more "
+    [ 27, 34, Expect => 1 ], # "tokens"
+  ],
+  q("here is a list", "of some more ", "tokens" tags) );
 
 done_testing;

@@ -30,7 +30,7 @@ sub parse_dict
    $self->list_of( ",", sub {
       my $key = $self->token_ident( Ident => 1 );
 
-      $self->expect( ":" );
+      $self->expect( ":", [ Expect => 1 ] );
 
       $ret{$key} = $self->parse;
    } );

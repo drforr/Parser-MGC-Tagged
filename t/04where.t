@@ -22,7 +22,7 @@ sub parse
       $wheres[0],
       '->where before parsing' );
 
-   $self->expect( "hello" );
+   $self->expect( "hello", [ Expect_1 => 1 ] );
    main::is( $self->pos,
       $positions[1],
       '->pos during parsing' );
@@ -30,7 +30,7 @@ sub parse
       $wheres[1],
       '->where during parsing' );
 
-   $self->expect( qr/world/ );
+   $self->expect( qr/world/, [ Expect_2 => 1 ] );
    main::is( $self->pos,
       $positions[2],
       '->pos after parsing' );
@@ -54,7 +54,10 @@ my $parser = TestParser->new;
 $parser->from_string( "hello world" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
-  q("hello world") );
+  q("hello world" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, Expect_1 => 1 ], [ 5, 11, Expect_2 => 1 ] ],
+  q("hello world" tags) );
 
 @positions = ( 0, 5, 11 );
 @wheres = (
@@ -64,6 +67,9 @@ is_deeply( $parser->{spaces},
 $parser->from_string( "hello\nworld" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
-  q("hello\nworld") );
+  q("hello\nworld" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, Expect_1 => 1 ], [ 5, 11, Expect_2 => 1 ] ],
+  q("hello\nworld" tags) );
 
 done_testing;

@@ -12,14 +12,14 @@ sub parse_hello
 {
    my $self = shift;
 
-   [ $self->expect( "hello" ), $self->expect( qr/world/ ) ];
+   [ $self->expect( "hello", [ Expect => 1 ] ), $self->expect( qr/world/, [ Expect => 1 ] ) ];
 }
 
 sub parse_hex
 {
    my $self = shift;
 
-   return hex +( $self->expect( qr/0x([0-9A-F]+)/i ) )[1];
+   return hex +( $self->expect( qr/0x([0-9A-F]+)/i, [ Expect => 1 ] ) )[1];
 }
 
 sub parse_foo_or_bar

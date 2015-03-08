@@ -16,7 +16,7 @@ sub parse
       sub { [ int => $self->token_int( Int => 1 ) ] },
       sub { [ str => $self->token_string( String => 1 ) ] },
       sub { [ ident => $self->token_ident( Ident => 1 ) ] },
-      sub { $self->expect( "@" ); die "Here I fail\n" },
+      sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
    );
 }
 

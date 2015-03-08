@@ -20,8 +20,8 @@ sub parse_term
    my $val = $self->parse_factor;
 
    1 while $self->any_of(
-      sub { $self->expect( "+" ); $self->commit; $val += $self->parse_factor; 1 },
-      sub { $self->expect( "-" ); $self->commit; $val -= $self->parse_factor; 1 },
+      sub { $self->expect( "+", [ Expect_1 => 1 ] ); $self->commit; $val += $self->parse_factor; 1 },
+      sub { $self->expect( "-", [ Expect_2 => 1 ] ); $self->commit; $val -= $self->parse_factor; 1 },
       sub { 0 },
    );
 
@@ -35,8 +35,8 @@ sub parse_factor
    my $val = $self->parse_atom;
 
    1 while $self->any_of(
-      sub { $self->expect( "*" ); $self->commit; $val *= $self->parse_atom; 1 },
-      sub { $self->expect( "/" ); $self->commit; $val /= $self->parse_atom; 1 },
+      sub { $self->expect( "*", [ Expect_1 => 1 ] ); $self->commit; $val *= $self->parse_atom; 1 },
+      sub { $self->expect( "/", [ Expect_1 => 1 ] ); $self->commit; $val /= $self->parse_atom; 1 },
       sub { 0 },
    );
 
