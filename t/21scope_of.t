@@ -54,7 +54,9 @@ $parser = DynamicDelimParser->new;
 
 is( $parser->from_string( "(45)" ), 45, '"(45)"' );
 is_deeply( $parser->{spaces}, { }, q("(45)" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 1, Expect => 1 ], [ 1, 3, Int => 1 ] ], q("(45)" tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 1, Expect => 1 ], [ 1, 3, Int => 1 ] ],
+  q("(45)" tags) );
 
 is( $parser->from_string( "[45]" ), 45, '"[45]"' );
 is_deeply( $parser->{spaces}, { }, q("[45]" spaces) );

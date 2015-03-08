@@ -18,7 +18,8 @@ sub parse
          sub { $self->scope_of( "(", \&parse, ")" ) },
         [ Any_Of => 1 ]
       );
-   } );
+   },
+   [ Sequence_Of => 1 ] );
 }
 
 use Data::Dumper;

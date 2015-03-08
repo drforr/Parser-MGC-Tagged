@@ -61,7 +61,7 @@ sub parse_element
 
    return XmlParser::Node::Element->new( $tag->{name}, $tag->{attrs} ) if $tag->{selfclose};
 
-   my $childlist = $self->sequence_of( \&parse_node );
+   my $childlist = $self->sequence_of( \&parse_node, [ Sequence_Of => 1 ] );
 
    $self->parse_close_tag->{name} eq $tag->{name}
       or $self->fail( "Expected $tag->{name} to be closed" );
@@ -76,7 +76,7 @@ sub parse_tag
    $self->expect( '<', [ Expect_1 => 1 ] );
    my $tagname = $self->token_ident( Ident => 1 );
 
-   my $attrs = $self->sequence_of( \&parse_tag_attr );
+   my $attrs = $self->sequence_of( \&parse_tag_attr, [ Sequence_Of => 1 ] );
 
    my $selfclose = $self->maybe_expect( '/', [ Maybe_Expect => 1 ] );
    $self->expect( '>', [ Expect_2 => 1 ] );

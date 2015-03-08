@@ -101,7 +101,8 @@ sub parse {
 
     # '9', '10'
     $self->sequence_of(
-       sub { $self->token_int ( Int_16 => 1 ) }
+       sub { $self->token_int ( Int_16 => 1 ) },
+      [ Sequence_Of => 1 ]
     ),
 
     # '' (pos() at 'a' but token_int() fails to match)

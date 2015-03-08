@@ -20,6 +20,7 @@ sub parse
            [ Any_Of => 1 ]
          );
       },
+     [ Sequence_Of => 1 ]
    );
 }
 
@@ -30,7 +31,9 @@ my $parser = TestParser->new;
 
 is_deeply( $parser->from_string( "a" ), [ "a/0" ], 'a' );
 is_deeply( $parser->{spaces}, { }, q("a" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 1, Expect => 1 ], [ 0, 1, Any_Of => 1 ] ], q("a" tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 1, Expect => 1 ], [ 0, 1, Any_Of => 1 ], [ 0, 1, Sequence_Of => 1 ] ],
+  q("a" tags) );
 
 is_deeply( $parser->from_string( "(b)" ), [ [ "b/1" ] ], '(b)' );
 is_deeply( $parser->{spaces}, { }, q("(b)" spaces) );

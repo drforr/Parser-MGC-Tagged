@@ -20,6 +20,7 @@ sub parse
          sub { $self->substring_before( qr/[A-Z]</ ) },
         [ Any_Of => 1 ]
       ) },
+     [ Sequence_Of => 1 ]
    );
 }
 
