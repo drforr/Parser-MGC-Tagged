@@ -19,6 +19,7 @@ sub from_string {
   my $self = shift;
 $self->{spaces} = { };
 $self->{tags} = [ ]; # There could be multiple tags starting at a given offset
+$self->{delimiters} = [ ]; # Save these for later?
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_string>\n";
@@ -240,6 +241,7 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws<\n";
 sub maybe_expect {
   my $self = shift;
   my ( $tag_name, $tag_value );
+  my $in_scope_of = (caller(3))[3] eq 'Parser::MGC::scope_of';
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ $_[-1] };
   }
@@ -250,25 +252,43 @@ sub maybe_expect {
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(3): [" . (caller(3))[3] . "\n";
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(2): [" . (caller(2))[3] . "\n";
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(1): [" . (caller(1))[3] . "\n";
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
     my $start_pos = $self->pos;
     my @result = $self->SUPER::maybe_expect( @_ );
     my $end_pos = $self->pos;
     if ( defined $tag_name and $start_pos != $end_pos ) {
-      push @{ $self->{tags} },
-        [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      if ( $in_scope_of ) {
+        push @{ $self->{delimiters} },
+          [ $start_pos, $end_pos ];
+      }
+      else {
+        push @{ $self->{tags} },
+          [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      }
     }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect A<\n";
     return @result;
   }
   else {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(3): [" . (caller(3))[3] . "\n";
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(2): [" . (caller(2))[3] . "\n";
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(1): [" . (caller(1))[3] . "\n";
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
     my $start_pos = $self->pos;
     my $result = $self->SUPER::maybe_expect( @_ );
     my $end_pos = $self->pos;
     if ( $start_pos != $end_pos ) {
-      push @{ $self->{tags} },
-        [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      if ( $in_scope_of ) {
+        push @{ $self->{delimiters} },
+          [ $start_pos, $end_pos ];
+      }
+      else {
+        push @{ $self->{tags} },
+          [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      }
     }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect S<\n";
     return $result;

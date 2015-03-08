@@ -40,36 +40,42 @@ is_deeply( $parser->{tags},
 is_deeply( $parser->from_string( "(b)" ), [ [ "b/1" ] ], '(b)' );
 is_deeply( $parser->{spaces}, { }, q("(b)" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 1, undef, undef ], # XXX Should go away.
-    [ 1, 2, Expect => 1 ],
+  [ [ 1, 2, Expect => 1 ],
     [ 1, 2, Any_Of => 1 ],
     [ 1, 2, Sequence_Of => 1 ],
-    [ 2, 3, undef, undef ], # XXX Should go away.
     [ 0, 3, Scope_Of => 1 ],
     [ 0, 3, Any_Of => 1 ],
     [ 0, 3, Sequence_Of => 1 ] ],
   q("(b)" tags) );
-#use YAML;die Dump $parser->{tags};
+is_deeply( $parser->{delimiters},
+  [ [ 0, 1 ],
+    [ 2, 3 ] ],
+  q("(b)" tags) );
 
-is_deeply( $parser->from_string( "c (d) e" ), [ "c/0", [ "d/1" ], "e/0" ], 'c (d) e' );
+is_deeply( $parser->from_string(
+  "c (d) e" ),
+  [ "c/0", [ "d/1" ], "e/0" ],
+  'c (d) e' );
 is_deeply( $parser->{spaces},
   { 1 => 2, 5 => 6 },
   q("c (d) e" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Expect => 1 ],
     [ 0, 1, Any_Of => 1 ],
-    [ 1, 2, Expect => 1 ], # XXX Should go away.
-    [ 1, 3, undef, undef ], # XXX Should go away.
+    [ 1, 2, Expect => 1 ], # XXX Should go away?
     [ 3, 4, Expect => 1 ],
     [ 3, 4, Any_Of => 1 ],
     [ 3, 4, Sequence_Of => 1 ],
-    [ 4, 5, undef, undef ], # XXX Should go away.
     [ 1, 5, Scope_Of => 1 ],
     [ 1, 5, Any_Of => 1 ],
     [ 5, 7, Expect => 1 ],
     [ 5, 7, Any_Of => 1 ],
     [ 0, 7, Sequence_Of => 1 ] ],
   q("c (d) e" tags) );
+is_deeply( $parser->{delimiters},
+  [ [ 1, 3 ],
+    [ 4, 5 ] ],
+  q("c (d) e" delimiters) );
 #use YAML;die Dump $parser->{tags};
 
 done_testing;

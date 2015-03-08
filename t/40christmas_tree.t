@@ -169,9 +169,7 @@ is_deeply( $parser->{tags},
     [ 62, 64, Int_14 => 1 ],
     [ 65, 67, Int_14 => 1 ],
     [ 62, 68, List_Of => 1 ],
-    [ 68, 69, undef, undef ], # XXX Should go away.
     [ 69, 71, Expect_15 => 1 ],
-    [ 71, 73, undef, undef ], # XXX Should go away.
     [ 68, 73, Scope_Of => 1 ],
     [ 73, 75, Int_16 => 1 ],
     [ 75, 78, Int_16 => 1 ],
@@ -181,6 +179,10 @@ is_deeply( $parser->{tags},
     [ 82, 83, Maybe_Expect_20 => 1 ],
     [ 83, 84, Maybe_Expect_21 => 1 ] ],
   q("$parse_me" tags) );
-#use YAML;die Dump($parser->{tags});
+is_deeply( $parser->{delimiters},
+  [ [ 68, 69 ],
+    [ 71, 73 ],
+  ],
+  q("$parse_me" delimiters) );
 
 done_testing;

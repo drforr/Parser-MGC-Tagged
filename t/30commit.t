@@ -60,12 +60,14 @@ is_deeply( $parser->{tags},
 is( $parser->from_string( '("hi")' ), "hi", '("hi")' );
 is_deeply( $parser->{spaces}, { }, q['("hi")' spaces] );
 is_deeply( $parser->{tags},
-  [ [ 0, 1, undef, undef ], # XXX Should go away.
-    [ 1, 5, String => 1 ],
-    [ 5, 6, undef, undef ], # XXX Should go away.
+  [ [ 1, 5, String => 1 ],
     [ 0, 6, Scope_Of => 1 ],
     [ 0, 6, Any_Of => 1 ] ],
   q['("hi")' tags] );
+is_deeply( $parser->{delimiters},
+  [ [ 0, 1 ],
+    [ 5, 6 ] ],
+  q['("hi")' delimiters] );
 
 ok( !eval { $parser->from_string( "(456)" ) }, '"(456)" fails' );
 is( $@,
