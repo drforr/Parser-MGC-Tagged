@@ -8,6 +8,19 @@ use base 'Parser::MGC';
 
 our $VERSION = '0.12';
 
+sub DEBUG() { $ENV{DEBUG} }
+sub DEBUG_IN {
+  my $str = (caller(1))[3];
+  $str =~ s/^Parser\::MGC\::Tagged\:://;
+  DEBUG and warn ' ' x $_[0]->{_depth_} . "$str>\n";
+}
+sub DEBUG_OUT {
+  my $txt = defined $_[1] ? " $_[1]" : '';
+  my $str = (caller(1))[3];
+  $str =~ s/^Parser\::MGC\::Tagged\:://;
+  DEBUG and warn ' ' x $_[0]->{_depth_} . "$str$txt<\n";
+}
+
 sub new {
   my $class = shift;
   my $rv = $class->SUPER::new( @_ );
@@ -22,9 +35,9 @@ $self->{tags} = [ ]; # There could be multiple tags starting at a given offset
 $self->{delimiters} = [ ]; # Save these for later?
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_string>\n";
+$self->DEBUG_IN;
    my $result = $self->SUPER::from_string( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_string<\n";
+$self->DEBUG_OUT;
    return $result;
 }
 
@@ -32,9 +45,9 @@ sub from_file {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_file>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::from_file( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_file<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -42,9 +55,9 @@ sub from_reader {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_reader>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::from_reader( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_reader<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -56,9 +69,9 @@ sub where {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "where>\n";
+$self->DEBUG_IN;
   my @result = $self->SUPER::where( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "where<\n";
+$self->DEBUG_OUT;
   return @result;
 }
 
@@ -74,9 +87,9 @@ sub at_eos {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "at_eos>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::at_eos( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "at_eos<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -84,9 +97,9 @@ sub scope_level {
    my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_level>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::scope_level( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_level<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -97,9 +110,9 @@ sub maybe {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::maybe( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -117,7 +130,7 @@ sub scope_of {
   }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_of>\n";
+$self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result;
   if ( $has_aref ) {
@@ -131,7 +144,7 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_of>\n";
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_of<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -149,7 +162,7 @@ sub list_of {
   }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "list_of>\n";
+$self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result;
   if ( $has_aref ) {
@@ -163,7 +176,7 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "list_of>\n";
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "list_of<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -177,9 +190,9 @@ sub sequence_of {
   local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "sequence_of>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::sequence_of( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "sequence_of<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -194,7 +207,7 @@ sub any_of {
   }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "any_of>\n";
+$self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result;
   if ( $has_aref ) {
@@ -204,12 +217,12 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "any_of>\n";
     $result = $self->SUPER::any_of( @_ );
   }
   my $end_pos = $self->pos;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "any_of call(1): [" . (caller(1))[3] . "\n";
+DEBUG and warn ' ' x $self->{_depth_} . "any_of call(1): [" . (caller(1))[3] . "\n";
   if ( !$in_token_number and $start_pos != $end_pos ) {
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "any_of<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -217,9 +230,9 @@ sub commit {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "commit>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::commit( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "commit<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -227,14 +240,14 @@ sub skip_ws {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws>\n";
+$self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result = $self->SUPER::skip_ws( @_ );
   my $end_pos = $self->pos;
   if ( $start_pos != $end_pos ) {
     $self->{spaces}{$start_pos} = $end_pos;
   }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "skip_ws<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -252,45 +265,59 @@ sub maybe_expect {
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(3): [" . (caller(3))[3] . "\n";
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(2): [" . (caller(2))[3] . "\n";
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(1): [" . (caller(1))[3] . "\n";
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect call(3): [" . (caller(3))[3] . "\n";
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect call(2): [" . (caller(2))[3] . "\n";
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect call(1): [" . (caller(1))[3] . "\n";
+$self->DEBUG_IN;
     my $start_pos = $self->pos;
     my @result = $self->SUPER::maybe_expect( @_ );
     my $end_pos = $self->pos;
-    if ( defined $tag_name and $start_pos != $end_pos ) {
-      if ( $in_scope_of ) {
-        push @{ $self->{delimiters} },
-          [ $start_pos, $end_pos ];
-      }
-      else {
-        push @{ $self->{tags} },
-          [ $start_pos, $end_pos, $tag_name, $tag_value ];
-      }
-    }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect A<\n";
-    return @result;
-  }
-  else {
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(3): [" . (caller(3))[3] . "\n";
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(2): [" . (caller(2))[3] . "\n";
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect call(1): [" . (caller(1))[3] . "\n";
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
-    my $start_pos = $self->pos;
-    my $result = $self->SUPER::maybe_expect( @_ );
-    my $end_pos = $self->pos;
+DEBUG and warn "[" . substr( $self->{str}, $start_pos, $end_pos - $start_pos ) . "]\n";
     if ( $start_pos != $end_pos ) {
       if ( $in_scope_of ) {
         push @{ $self->{delimiters} },
           [ $start_pos, $end_pos ];
       }
       else {
-        push @{ $self->{tags} },
-          [ $start_pos, $end_pos, $tag_name, $tag_value ];
+        if ( $self->{spaces}{$start_pos} and
+             $self->{spaces}{$start_pos} == $end_pos ) {
+DEBUG and warn "*** edge case hit\n";
+        }
+        else {
+          push @{ $self->{tags} },
+            [ $start_pos, $end_pos, $tag_name, $tag_value ];
+        }
       }
     }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe_expect S<\n";
+$self->DEBUG_OUT( 'A' );
+    return @result;
+  }
+  else {
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect call(3): [" . (caller(3))[3] . "\n";
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect call(2): [" . (caller(2))[3] . "\n";
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect call(1): [" . (caller(1))[3] . "\n";
+DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
+    my $start_pos = $self->pos;
+    my $result = $self->SUPER::maybe_expect( @_ );
+    my $end_pos = $self->pos;
+DEBUG and warn "[" . substr( $self->{str}, $start_pos, $end_pos - $start_pos ) . "]\n";
+    if ( $start_pos != $end_pos ) {
+      if ( $in_scope_of ) {
+        push @{ $self->{delimiters} },
+          [ $start_pos, $end_pos ];
+      }
+      else {
+        if ( $self->{spaces}{$start_pos} and
+             $self->{spaces}{$start_pos} == $end_pos ) {
+DEBUG and warn "*** edge case hit\n";
+        }
+        else {
+          push @{ $self->{tags} },
+            [ $start_pos, $end_pos, $tag_name, $tag_value ];
+        }
+      }
+    }
+$self->DEBUG_OUT( 'S' );
     return $result;
   }
 }
@@ -306,15 +333,15 @@ sub expect {
 
 local $self->{_depth_} = $self->{_depth_} + 1;
   if ( wantarray ) {
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect>\n";
+$self->DEBUG_IN;
     my @result = $self->SUPER::expect( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect a<\n";
+$self->DEBUG_OUT( 'A' );
     return @result;
   }
   else {
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect>\n";
+$self->DEBUG_IN;
     my $result = $self->SUPER::expect( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "expect S<\n";
+$self->DEBUG_OUT( 'S' );
     return $result;
   }
 }
@@ -323,9 +350,9 @@ sub substring_before {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "substring_before>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::substring_before( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "substring_before<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -341,7 +368,7 @@ sub generic_token {
   }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "generic_token>\n";
+$self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result = $self->SUPER::generic_token( @_ );
   my $end_pos = $self->pos;
@@ -349,7 +376,7 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "generic_token>\n";
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "generic_token<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -357,9 +384,9 @@ sub _token_generic {
   my $self = shift;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "_token_generic>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::_token_generic( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "_token_generic<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -370,9 +397,9 @@ sub token_int {
   local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_int>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::token_int( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_int<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -383,9 +410,9 @@ sub token_float {
   local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_float>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::token_float( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_float<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -396,9 +423,9 @@ sub token_number {
   local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_number>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::token_number( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_number<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -407,12 +434,12 @@ sub token_string {
   my ( $tag_name, $tag_value ) = @_;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_string>\n";
+$self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result = $self->SUPER::token_string( @_ );
   my $end_pos = $self->pos;
   push @{ $self->{tags} }, [ $start_pos, $end_pos, $tag_name, $tag_value ];
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_string<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -427,9 +454,9 @@ sub token_ident {
   local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_ident>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::token_ident( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_ident<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
@@ -440,9 +467,9 @@ sub token_kw {
   local $self->{tag_value} = $tag_value;
 
 local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_kw>\n";
+$self->DEBUG_IN;
   my $result = $self->SUPER::token_kw( @_[ 0 .. $#_ - 1 ] );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "token_kw<\n";
+$self->DEBUG_OUT;
   return $result;
 }
 
