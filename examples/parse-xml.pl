@@ -73,11 +73,11 @@ sub parse_tag
    my $self = shift;
 
    $self->expect( '<' );
-   my $tagname = $self->token_ident;
+   my $tagname = $self->token_ident( Ident => 1 );
 
    my $attrs = $self->sequence_of( \&parse_tag_attr );
 
-   my $selfclose = $self->maybe_expect( '/' );
+   my $selfclose = $self->maybe_expect( '/', Maybe_Expect => 1 );
    $self->expect( '>' );
 
    return {
@@ -92,7 +92,7 @@ sub parse_close_tag
    my $self = shift;
 
    $self->expect( '</' );
-   my $tagname = $self->token_ident;
+   my $tagname = $self->token_ident( Ident => 1 );
    $self->expect( '>' );
 
    return { name => $tagname };
@@ -102,7 +102,7 @@ sub parse_tag_attr
 {
    my $self = shift;
 
-   my $attrname = $self->token_ident;
+   my $attrname = $self->token_ident( Ident => 1 );
    $self->expect( '=' );
    return [ $attrname => $self->parse_tag_attr_value ];
 }
@@ -112,7 +112,7 @@ sub parse_tag_attr_value
    my $self = shift;
 
    # TODO: This sucks
-   return $self->token_string;
+   return $self->token_string( String => 1 );
 }
 
 

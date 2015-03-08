@@ -11,9 +11,9 @@ sub parse
    my $self = shift;
 
    $self->any_of(
-      sub { $self->token_int },
+      sub { $self->token_int( Int => 1 ) },
 
-      sub { $self->token_string },
+      sub { $self->token_string( String => 1 ) },
 
       sub { $self->scope_of( "{",
                sub { $self->commit; $self->parse_dict },
@@ -28,7 +28,7 @@ sub parse_dict
 
    my %ret;
    $self->list_of( ",", sub {
-      my $key = $self->token_ident;
+      my $key = $self->token_ident( Ident => 1 );
 
       $self->expect( ":" );
 

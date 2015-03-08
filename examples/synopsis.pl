@@ -12,9 +12,9 @@ sub parse
 
    $self->sequence_of( sub {
       $self->any_of(
-         sub { $self->token_int },
-         sub { $self->token_string },
-         sub { \$self->token_ident },
+         sub { $self->token_int( Int => 1 ) },
+         sub { $self->token_string( String => 1 ) },
+         sub { \$self->token_ident( Ident => 1 ) },
          sub { $self->scope_of( "(", \&parse, ")" ) }
       );
    } );

@@ -14,7 +14,7 @@ sub parse
 
    $self->scope_of(
       "(",
-      sub { return $self->token_int },
+      sub { return $self->token_int( Int => 1 ) },
       ")"
    );
 }
@@ -31,7 +31,7 @@ sub parse
 
    $self->scope_of(
       undef,
-      sub { return $self->token_int },
+      sub { return $self->token_int( Int => 1 ) },
       $delim,
    );
 }

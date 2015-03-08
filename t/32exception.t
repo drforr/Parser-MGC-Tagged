@@ -13,7 +13,7 @@ sub parse
 {
    my $self = shift;
 
-   return $self->token_int;
+   return $self->token_int( Int => 1 );
 }
 
 package main;

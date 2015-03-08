@@ -13,7 +13,7 @@ sub parse
    my $self = shift;
 
    $self->list_of( ",", sub {
-      return $self->token_int;
+      return $self->token_int( Int => 1 );
    } );
 }
 
