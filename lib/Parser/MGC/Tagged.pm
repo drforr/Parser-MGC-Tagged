@@ -47,15 +47,9 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "from_reader<\n";
   return $result;
 }
 
-sub pos {
-   my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "pos>\n";
-  my $result = $self->SUPER::pos( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "pos<\n";
-  return $result;
-}
+#
+# pos() is an accessor.
+#
 
 sub where {
   my $self = shift;
@@ -67,25 +61,13 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "where<\n";
   return @result;
 }
 
-sub fail {
-  my $self = shift;
+#
+# fail() simply dies in fail_from()
+#
 
-local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "fail>\n";
-  my $result = $self->SUPER::fail( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "fail<\n";
-  return $result;
-}
-
-sub fail_from {
-   my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "fail_from>\n";
-  my $result = $self->SUPER::fail_from( @_ );
-$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "fail_from<\n";
-  return $result;
-}
+#
+# fail_from() simply dies.
+#
 
 sub at_eos {
   my $self = shift;
@@ -203,6 +185,7 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "sequence_of<\n";
 sub any_of {
   my $self = shift;
   my ( $tag_name, $tag_value );
+  my $in_token_number = (caller(1))[3] eq 'Parser::MGC::token_number';
   my $has_aref = 0;
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     $has_aref = 1;
@@ -220,7 +203,8 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "any_of>\n";
     $result = $self->SUPER::any_of( @_ );
   }
   my $end_pos = $self->pos;
-  if ( $start_pos != $end_pos ) {
+$ENV{DEBUG} and warn ' ' x $self->{_depth_} . "any_of call(1): [" . (caller(1))[3] . "\n";
+  if ( !$in_token_number and $start_pos != $end_pos ) {
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }

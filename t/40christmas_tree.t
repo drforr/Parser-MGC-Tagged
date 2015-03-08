@@ -156,7 +156,6 @@ is_deeply( $parser->{tags},
     [ 1, 5, Float_2 => 1 ],
     [ 5, 9, Float_3 => 1 ],
     [ 9, 13, Number_4 => 1 ],
-    [ 9, 13, undef, undef ], # XXX Should go away.
     [ 13, 22, String_5 => 1 ],
     [ 22, 28, Ident_6 => 1 ],
     [ 29, 36, Keyword_7 => 1 ],
