@@ -15,7 +15,7 @@ sub parse
 
          sub { my ( undef, $tag, $delim ) = $self->expect( qr/([A-Z])(<+)/ );
                $self->commit;
-               +{ $tag => $self->scope_of( undef, \&parse, ">" x length $delim ) }; },
+               +{ $tag => $self->scope_of( undef, \&parse, ">" x length $delim, [ Scope_Of => 1 ] ) }; },
 
          sub { $self->substring_before( qr/[A-Z]</ ) },
         [ Any_Of => 1 ]

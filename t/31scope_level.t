@@ -16,7 +16,7 @@ sub parse
       sub {
          $self->any_of(
             sub { $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) . "/" . $self->scope_level },
-            sub { $self->scope_of( "(", \&parse, ")" ) },
+            sub { $self->scope_of( "(", \&parse, ")", [ Scope => 1 ] ) },
            [ Any_Of => 1 ]
          );
       },

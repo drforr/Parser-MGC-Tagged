@@ -122,10 +122,32 @@ $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "maybe<\n";
 
 sub scope_of {
   my $self = shift;
+  my ( $tag_name, $tag_value );
+  my $has_aref = 0;
+  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
+    $has_aref = 1;
+    ( $tag_name, $tag_value ) = @{ $_[-1] };
+  }
+  if ( !defined $tag_name ) {
+    $tag_name = $self->{tag_name};
+    $tag_value = $self->{tag_value};
+  }
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_of>\n";
-  my $result = $self->SUPER::scope_of( @_ );
+  my $start_pos = $self->pos;
+  my $result;
+  if ( $has_aref ) {
+    $result = $self->SUPER::scope_of( @_[ 0 .. $#_-1 ] );
+  }
+  else {
+    $result = $self->SUPER::scope_of( @_ );
+  }
+  my $end_pos = $self->pos;
+  if ( $start_pos != $end_pos ) {
+    push @{ $self->{tags} },
+      [ $start_pos, $end_pos, $tag_name, $tag_value ];
+  }
 $ENV{DEBUG} and warn ' ' x $self->{_depth_} . "scope_of<\n";
   return $result;
 }

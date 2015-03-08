@@ -17,7 +17,8 @@ sub parse
 
       sub { $self->scope_of( "{",
                sub { $self->commit; $self->parse_dict },
-            "}" );
+            "}",
+        [ Scope_Of => 1 ] );
       },
      [ Any_Of => 1 ]
    );

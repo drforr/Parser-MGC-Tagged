@@ -97,7 +97,8 @@ sub parse {
     $self->scope_of(
         '(',
         sub { $self->expect( '8', [ Expect_15 => 1 ] ) },
-        ')'
+        ')',
+      [ Scope_Of => 1 ]
     ),
 
     # '9', '10'

@@ -15,7 +15,7 @@ sub parse
          sub { $self->token_int( Int => 1 ) },
          sub { $self->token_string( String => 1 ) },
          sub { \$self->token_ident( Ident => 1 ) },
-         sub { $self->scope_of( "(", \&parse, ")" ) },
+         sub { $self->scope_of( "(", \&parse, ")", [ Scope_Of => 1 ] ) },
         [ Any_Of => 1 ]
       );
    },

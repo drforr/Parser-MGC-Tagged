@@ -20,7 +20,8 @@ sub parse
                $self->commit;
                $self->token_string( String => 1 );
             },
-            ")" );
+            ")",
+           [ Scope_Of => 1 ] );
       },
       [ Any_Of => 1 ]
    );

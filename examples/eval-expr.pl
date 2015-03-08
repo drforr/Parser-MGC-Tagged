@@ -50,7 +50,9 @@ sub parse_atom
    my $self = shift;
 
    $self->any_of(
-      sub { $self->scope_of( "(", sub { $self->commit; $self->parse }, ")" ) },
+      sub { $self->scope_of(
+               "(", sub { $self->commit; $self->parse }, ")",
+               [ Scope_Of => 1 ] ) },
       sub { $self->token_int( Int => 1 ) },
      [ Any_Of => 1 ]
    );
