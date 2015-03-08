@@ -28,11 +28,15 @@ my $parser = TestParser->new;
 
 is( $parser->from_string( "hello" ), "hello", '"hello"' );
 is_deeply( $parser->{spaces}, { }, q("hello" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 5, Ident => 1 ] ], q("hello" tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, Ident => 1 ] ],
+  q("hello" tags) );
 
 is( $parser->from_string( "123" ), 123, '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 3, Int => 1 ] ], q("123" tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Int => 1 ] ],
+  q("123" tags) );
 
 $die = "Now have to fail\n";
 ok( !eval { $parser->from_string( "456" ) }, '"456" with $die fails' );

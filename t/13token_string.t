@@ -61,7 +61,9 @@ is_deeply( $parser->{tags},
 
 is( $parser->from_string( q["tab \t"] ), "tab \t", '\t' );
 is_deeply( $parser->{spaces}, { }, q(q["tab \t"] spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 8, String => 1 ] ], q(q["tab \t"] tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 8, String => 1 ] ],
+  q(q["tab \t"] tags) );
 
 is( $parser->from_string( q["newline \n"] ), "newline \n", '\n' );
 is_deeply( $parser->{spaces}, { }, q(q["newline \n"] spaces) );
@@ -150,7 +152,8 @@ is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("foo" "bar" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 5, String_1 => 1 ], [ 5, 11, String_2 => 1 ] ],
+  [ [ 0, 5, String_1 => 1 ],
+    [ 5, 11, String_2 => 1 ] ],
   q(q["foo" "bar"] tags) );
 
 done_testing;

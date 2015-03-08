@@ -28,7 +28,8 @@ is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 5, Expect_1 => 1 ], [ 5, 11, Expect_2 => 1 ] ],
+  [ [ 0, 5, Expect_1 => 1 ],
+    [ 5, 11, Expect_2 => 1 ] ],
   q("hello world" tags) );
 
 ok( $parser->from_string( "hello\nworld" ), '"hello\nworld"' );
@@ -36,10 +37,12 @@ is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello\nworld" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 5, Expect_1 => 1 ], [ 5, 11, Expect_2 => 1 ] ],
+  [ [ 0, 5, Expect_1 => 1 ],
+    [ 5, 11, Expect_2 => 1 ] ],
   q("hello\nworld" tags) );
 
-ok( !eval { $parser->from_string( "hello\n# Comment\nworld" ) }, '"hello world" with comment fails' );
+ok( !eval { $parser->from_string( "hello\n# Comment\nworld" ) },
+    '"hello world" with comment fails' );
 
 $parser = TestParser->new(
    patterns => { comment => qr/#.*\n/ },
@@ -51,7 +54,8 @@ is_deeply( $parser->{spaces},
   { 5 => 16 },
   q("hello\n# Comment\nworld") );
 is_deeply( $parser->{tags},
-  [ [ 0, 5, Expect_1 => 1 ], [ 5, 21, Expect_2 => 1 ] ],
+  [ [ 0, 5, Expect_1 => 1 ],
+    [ 5, 21, Expect_2 => 1 ] ],
   q("hello\n# Comment\nworld" tags) );
 
 done_testing;

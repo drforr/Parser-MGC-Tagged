@@ -24,10 +24,14 @@ my $parser = OneOfParser->new;
 
 is_deeply( $parser->from_string( "123" ), [ int => 123 ], 'one_of integer' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 3, Int => 1 ] ], q("123" tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Int => 1 ] ],
+  q("123" tags) );
 
 is_deeply( $parser->from_string( q["hi"] ), [ str => "hi" ], 'one_of string' );
 is_deeply( $parser->{spaces}, { }, q(q["hi"] spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 4, String => 1 ] ], q(q["hi"] tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 4, String => 1 ] ],
+  q(q["hi"] tags) );
 
 done_testing;
