@@ -21,6 +21,32 @@ sub parse
    );
 }
 
+package TestParser2;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return [
+     $self->any_of(
+        sub { [ int => $self->token_int( Int => 1 ) ] },
+        sub { [ str => $self->token_string( String => 1 ) ] },
+        sub { [ ident => $self->token_ident( Ident => 1 ) ] },
+        sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
+       [ Any_Of => 1 ]
+     ),
+     $self->any_of(
+        sub { [ int => $self->token_int( Int => 1 ) ] },
+        sub { [ str => $self->token_string( String => 1 ) ] },
+        sub { [ ident => $self->token_ident( Ident => 1 ) ] },
+        sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
+       [ Any_Of => 1 ]
+     ),
+  ];
+    
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -53,5 +79,18 @@ ok( !eval { $parser->from_string( "@" ) }, '"@" fails' );
 is( $@, "Here I fail\n", 'Exception from "@" failure' );
 
 ok( !eval { $parser->from_string( "+" ) }, '"+" fails' );
+
+$parser = TestParser2->new;
+
+is_deeply( $parser->from_string( "123 456" ),
+  [ [ int => 123 ], [ int => 456 ] ],
+  '"123"' );
+is_deeply( $parser->{spaces}, { 3 => 4 }, q("123 456" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Int => 1 ],
+    [ 0, 3, Any_Of => 1 ],
+    [ 4, 7, Int => 1 ],
+    [ 4, 7, Any_Of => 1 ] ],
+  q("123 456" tags) );
 
 done_testing;

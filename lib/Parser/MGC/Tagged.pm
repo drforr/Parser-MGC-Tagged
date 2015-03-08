@@ -229,6 +229,9 @@ $self->DEBUG_IN;
   my $end_pos = $self->pos;
 DEBUG and warn ' ' x $self->{_depth_} . "any_of call(1): [" . (caller(1))[3] . "\n";
   if ( !$in_token_number and $start_pos != $end_pos ) {
+    if ( $self->{spaces}{$start_pos} ) {
+      $start_pos = $self->{spaces}{$start_pos};
+    }
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }
