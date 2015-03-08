@@ -86,9 +86,9 @@ is_deeply( $parser->{spaces},
   q("1 'one' 2 'two'" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Int => 1 ],
-    [ 1, 7, String => 1 ],
+    [ 2, 7, String => 1 ],
     [ 8, 9, Int => 1 ],
-    [ 9, 15, String => 1 ],
+    [ 10, 15, String => 1 ],
     [ 0, 15, Sequence_Of => 1 ] ],
   q("1 'one' 2 'two'" tags) );
 

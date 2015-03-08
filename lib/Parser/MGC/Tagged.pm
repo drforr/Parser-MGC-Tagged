@@ -444,6 +444,9 @@ $self->DEBUG_IN;
   my $start_pos = $self->pos;
   my $result = $self->SUPER::token_string( @_ );
   my $end_pos = $self->pos;
+  if ( $self->{spaces}{$start_pos} ) {
+    $start_pos = $self->{spaces}{$start_pos};
+  }
   push @{ $self->{tags} }, [ $start_pos, $end_pos, $tag_name, $tag_value ];
 $self->DEBUG_OUT;
   return $result;

@@ -153,7 +153,7 @@ is_deeply( $parser->{spaces},
   q("foo" "bar" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, String_1 => 1 ],
-    [ 5, 11, String_2 => 1 ] ],
+    [ 6, 11, String_2 => 1 ] ],
   q(q["foo" "bar"] tags) );
 
 done_testing;
