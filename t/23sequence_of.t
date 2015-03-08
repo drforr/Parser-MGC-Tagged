@@ -55,8 +55,8 @@ is_deeply( $parser->{spaces},
   q("4 5 6" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Int => 1 ],
-    [ 1, 3, Int => 1 ],
-    [ 3, 5, Int => 1 ],
+    [ 2, 3, Int => 1 ],
+    [ 4, 5, Int => 1 ],
     [ 0, 5, Sequence_Of => 1 ] ],
   q("4 5 6" tags) );
 
@@ -72,9 +72,11 @@ is_deeply( $parser->{spaces},
   { 2 => 3, 5 => 6, 10 => 11 },
   q("10 20 'ab' 'cd'" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 2, Int => 1 ], [ 2, 5, Int => 1 ],
+  [ [ 0, 2, Int => 1 ],
+    [ 3, 5, Int => 1 ],
     [ 0, 5, Sequence_Of => 1 ],
-    [ 5, 10, String => 1 ], [ 10, 15, String => 1 ],
+    [ 5, 10, String => 1 ],
+    [ 10, 15, String => 1 ],
     [ 5, 15, Sequence_Of => 1 ] ],
   q("10 20 'ab' 'cd'" tags) );
 
@@ -85,7 +87,7 @@ is_deeply( $parser->{spaces},
   q("10 20" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 2, Int => 1 ],
-    [ 2, 5, Int => 1 ],
+    [ 3, 5, Int => 1 ],
     [ 0, 5, Sequence_Of => 1 ] ],
   q("10 20" tags) );
 

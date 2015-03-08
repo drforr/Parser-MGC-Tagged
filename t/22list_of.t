@@ -45,7 +45,7 @@ is_deeply( $parser->{spaces},
   q("7, 8" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Int => 1 ],
-    [ 2, 4, Int => 1 ],
+    [ 3, 4, Int => 1 ],
     [ 0, 4, List_Of => 1 ] ],
   q("7, 8" tags) );
 
