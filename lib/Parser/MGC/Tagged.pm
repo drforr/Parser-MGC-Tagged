@@ -175,6 +175,13 @@ $self->DEBUG_IN;
     $result = $self->SUPER::list_of( @_ );
   }
   my $end_pos = $self->pos;
+  my %rev_spaces = reverse %{ $self->{spaces} };
+  if ( $rev_spaces{$end_pos} ) {
+    $end_pos = $rev_spaces{$end_pos};
+  }
+  if ( $self->{spaces}{$start_pos} ) {
+    $start_pos = $self->{spaces}{$start_pos};
+  }
   if ( $start_pos != $end_pos ) {
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];

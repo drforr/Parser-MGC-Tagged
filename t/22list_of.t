@@ -18,6 +18,25 @@ sub parse
    [ List_Of => 1 ] );
 }
 
+package TestParser2;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return [
+     $self->list_of( ",", sub {
+        return $self->token_int( Int => 1 );
+     },
+     [ List_Of => 1 ] ),
+     $self->list_of( ",", sub {
+        return $self->token_int( Int => 1 );
+     },
+     [ List_Of => 1 ] ),
+  ];
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -48,5 +67,16 @@ is_deeply( $parser->{tags},
     [ 3, 4, Int => 1 ],
     [ 0, 4, List_Of => 1 ] ],
   q("7, 8" tags) );
+
+$parser = TestParser2->new;
+
+is_deeply( $parser->from_string( "123 456" ), [ [ 123 ], [ 456 ] ], '"123"' );
+is_deeply( $parser->{spaces}, { 3 => 4 }, q("123 456" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Int => 1 ],
+    [ 0, 3, List_Of => 1 ],
+    [ 4, 7, Int => 1 ],
+    [ 4, 7, List_Of => 1 ] ],
+  q("123 456" tags) );
 
 done_testing;
