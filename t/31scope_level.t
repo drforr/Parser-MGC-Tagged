@@ -25,7 +25,7 @@ sub parse
 }
 
 package main;
-$ENV{DEBUG} = 1;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
@@ -61,7 +61,6 @@ is_deeply( $parser->{spaces},
 is_deeply( $parser->{tags},
   [ [ 0, 1, Expect => 1 ],
     [ 0, 1, Any_Of => 1 ],
-    [ 1, 2, Expect => 1 ], # XXX Should go away when whitespace does.
     [ 3, 4, Expect => 1 ],
     [ 3, 4, Any_Of => 1 ],
     [ 3, 4, Sequence_Of => 1 ],

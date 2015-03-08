@@ -53,7 +53,7 @@ is_deeply( $parser->{spaces},
   q("hello world" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
-    [ 5, 11, Expect_2 => 1 ] ],
+    [ 6, 11, Expect_2 => 1 ] ],
   q("hello world" tags) );
 
 is_deeply( $parser->from_string( "  hello world  " ),
@@ -65,8 +65,8 @@ is_deeply( $parser->{spaces},
     13 => 15 },
   q("  hello world  " spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 7, Expect_1 => 1 ],
-    [ 7, 13, Expect_2 => 1 ] ],
+  [ [ 2, 7, Expect_1 => 1 ],
+    [ 8, 13, Expect_2 => 1 ] ],
   q("  hello world  " tags) );
 
 # Perl 5.13.6 changed the regexp form
