@@ -22,8 +22,8 @@ sub parse
 {
    my $self = shift;
 
-   return [ $self->token_string( String1 => 1 ),
-            $self->token_string( String2 => 1 ) ];
+   return [ $self->token_string( String_1 => 1 ),
+            $self->token_string( String_2 => 1 ) ];
 }
 
 package main;
@@ -150,7 +150,7 @@ is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("foo" "bar" spaces) );
 is_deeply( $parser->{tags},
-  [ [ 0, 5, String1 => 1 ], [ 5, 11, String2 => 1 ] ],
+  [ [ 0, 5, String_1 => 1 ], [ 5, 11, String_2 => 1 ] ],
   q(q["foo" "bar"] tags) );
 
 done_testing;

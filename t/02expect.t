@@ -12,7 +12,9 @@ sub parse_hello
 {
    my $self = shift;
 
-   [ $self->expect( "hello", [ Expect => 1 ] ), $self->expect( qr/world/, [ Expect => 1 ] ) ];
+   [ $self->expect( "hello", [ Expect_1 => 1 ] ),
+     $self->expect( qr/world/, [ Expect_2 => 1 ] )
+   ];
 }
 
 sub parse_hex
@@ -34,7 +36,8 @@ sub parse_numrange
 {
    my $self = shift;
 
-   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/, [ Maybe_Expect => 1 ] ) )[1,2] ];
+   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/,
+                                   [ Maybe_Expect => 1 ] ) )[1,2] ];
 }
 
 package main;
@@ -48,6 +51,9 @@ is_deeply( $parser->from_string( "hello world" ),
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, Expect_1 => 1 ], [ 5, 11, Expect_2 => 1 ] ],
+  q("hello world" tags) );
 
 is_deeply( $parser->from_string( "  hello world  " ),
    [ "hello", "world" ],
@@ -57,6 +63,9 @@ is_deeply( $parser->{spaces},
     7 => 8,
     13 => 15 },
   q("  hello world  " spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 7, Expect_1 => 1 ], [ 7, 13, Expect_2 => 1 ] ],
+  q("  hello world  " tags) );
 
 # Perl 5.13.6 changed the regexp form
 # Accept both old and new-style stringification
@@ -73,6 +82,7 @@ $parser = TestParser->new( toplevel => "parse_hex" );
 
 is( $parser->from_string( "0x123" ), 0x123, "Hex parser captures substring" );
 is_deeply( $parser->{spaces}, { }, q("0x123" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 5, Expect => 1 ] ], q("0x123" tags) );
 
 $parser = TestParser->new( toplevel => "parse_foo_or_bar" );
 

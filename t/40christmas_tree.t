@@ -156,19 +156,32 @@ is_deeply( $parser->{tags},
     [ 1, 5, Float_2 => 1 ],
     [ 5, 9, Float_3 => 1 ],
     [ 9, 13, Number_4 => 1 ],
+    [ 9, 13, undef, undef ], # XXX Should go away.
     [ 13, 22, String_5 => 1 ],
     [ 22, 28, Ident_6 => 1 ],
+    [ 29, 36, Keyword_7 => 1 ],
     [ 36, 44, Generic_Token_8 => 1 ],
     [ 44, 46, Int_9 => 1 ],
+    [ 44, 46, Any_Of => 1 ],
     [ 46, 53, String_11 => 1 ],
+    [ 46, 53, Any_Of => 1 ],
     [ 53, 62, String_13 => 1 ],
+    [ 53, 62, Any_Of => 1 ],
     [ 62, 64, Int_14 => 1 ],
     [ 65, 67, Int_14 => 1 ],
+    [ 62, 68, List_Of => 1 ],
+    [ 68, 69, undef, undef ], # XXX Should go away.
+    [ 69, 71, Expect_15 => 1 ],
+    [ 71, 73, undef, undef ], # XXX Should go away.
+    [ 68, 73, Scope_Of => 1 ],
     [ 73, 75, Int_16 => 1 ],
     [ 75, 78, Int_16 => 1 ],
+    [ 73, 78, Sequence_Of => 1 ],
+    [ 78, 80, Expect_18 => 1 ],
+    [ 80, 82, Expect_19 => 1 ],
     [ 82, 83, Maybe_Expect_20 => 1 ],
     [ 83, 84, Maybe_Expect_21 => 1 ] ],
   q("$parse_me" tags) );
-use YAML;die Dump($parser->{tags});
+#use YAML;die Dump($parser->{tags});
 
 done_testing;

@@ -13,7 +13,8 @@ sub parse
    my $self = shift;
 
    my @tokens;
-   push @tokens, $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) while !$self->at_eos;
+   push @tokens,
+     $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) while !$self->at_eos;
 
    return \@tokens;
 }

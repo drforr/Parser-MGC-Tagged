@@ -28,6 +28,8 @@ my $value = $parser->from_string( "\t123" );
 
 is( $value, 123, '->from_string' );
 is_deeply( $parser->{spaces}, { 0 => 1 }, q("\t123" spaces) );
+is_deeply( $parser->{tags}, [ [ 0, 4, Int => 1 ] ], q("\t123" tags) );
+#use YAML;die Dump $parser->{tags};
 
 ok( !eval { $parser->from_string( "\t123." ) }, 'Trailing input on string fails' );
 is( $@,

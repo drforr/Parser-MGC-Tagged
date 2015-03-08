@@ -52,12 +52,19 @@ my $parser = TestParser->new;
 
 is( $parser->from_string( "123" ), 123, '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 3, Int => 1 ], [ 0, 3, Any_Of => 1 ] ], q("123" tags) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, Int => 1 ],
+    [ 0, 3, Any_Of => 1 ] ],
+  q("123" tags) );
 
 is( $parser->from_string( '("hi")' ), "hi", '("hi")' );
 is_deeply( $parser->{spaces}, { }, q['("hi")' spaces] );
 is_deeply( $parser->{tags},
-  [ [ 1, 5, String => 1 ], [ 0, 6, Any_Of => 1 ] ],
+  [ [ 0, 1, undef, undef ], # XXX Should go away.
+    [ 1, 5, String => 1 ],
+    [ 5, 6, undef, undef ], # XXX Should go away.
+    [ 0, 6, Scope_Of => 1 ],
+    [ 0, 6, Any_Of => 1 ] ],
   q['("hi")' tags] );
 
 ok( !eval { $parser->from_string( "(456)" ) }, '"(456)" fails' );
