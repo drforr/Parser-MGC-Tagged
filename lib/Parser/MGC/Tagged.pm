@@ -141,6 +141,9 @@ $self->DEBUG_IN;
   }
   my $end_pos = $self->pos;
   if ( $start_pos != $end_pos ) {
+    if ( $self->{spaces}{$start_pos} ) {
+      $start_pos = $self->{spaces}{$start_pos};
+    }
     push @{ $self->{tags} },
       [ $start_pos, $end_pos, $tag_name, $tag_value ];
   }
