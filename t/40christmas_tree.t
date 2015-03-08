@@ -64,13 +64,14 @@ sub parse {
 
     # '5'
     # Alternation with no fallthrough
-    $self->any_of( sub { $self->token_int ( Int_9 => 1 ) } ),
+    $self->any_of( sub { $self->token_int ( Int_9 => 1 ) }, [ Any_Of => 1 ] ),
 
     # 'fail'
     # Alternation with fallthrough ('fail' does not match token_int())
     $self->any_of(
       sub { $self->token_int ( Int_10 => 1 ) },
-      sub { $self->token_string ( String_11 => 1 ) }
+      sub { $self->token_string ( String_11 => 1 ) },
+      [ Any_Of => 1 ]
     ),
 
     # 'commit'
@@ -80,7 +81,8 @@ sub parse {
       sub {
         $self->commit;
         $self->token_string ( String_13 => 1 )
-      }
+      },
+      [ Any_Of => 1 ]
     ),
 
     # '6', '7'

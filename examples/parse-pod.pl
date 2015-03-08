@@ -18,6 +18,7 @@ sub parse
                +{ $tag => $self->scope_of( undef, \&parse, ">" x length $delim ) }; },
 
          sub { $self->substring_before( qr/[A-Z]</ ) },
+        [ Any_Of => 1 ]
       ) },
    );
 }

@@ -23,6 +23,7 @@ sub parse_term
       sub { $self->expect( "+", [ Expect_1 => 1 ] ); $self->commit; $val += $self->parse_factor; 1 },
       sub { $self->expect( "-", [ Expect_2 => 1 ] ); $self->commit; $val -= $self->parse_factor; 1 },
       sub { 0 },
+     [ Any_Of => 1 ],
    );
 
    return $val;
@@ -38,6 +39,7 @@ sub parse_factor
       sub { $self->expect( "*", [ Expect_1 => 1 ] ); $self->commit; $val *= $self->parse_atom; 1 },
       sub { $self->expect( "/", [ Expect_1 => 1 ] ); $self->commit; $val /= $self->parse_atom; 1 },
       sub { 0 },
+     [ Any_Of => 1 ]
    );
 
    return $val;
@@ -50,6 +52,7 @@ sub parse_atom
    $self->any_of(
       sub { $self->scope_of( "(", sub { $self->commit; $self->parse }, ")" ) },
       sub { $self->token_int( Int => 1 ) },
+     [ Any_Of => 1 ]
    );
 }
 

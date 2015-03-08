@@ -19,6 +19,7 @@ sub parse
                sub { $self->commit; $self->parse_dict },
             "}" );
       },
+     [ Any_Of => 1 ]
    );
 }
 

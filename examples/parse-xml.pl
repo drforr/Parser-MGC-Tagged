@@ -37,6 +37,7 @@ sub parse_node
    $self->any_of(
       \&parse_plaintext,
       \&parse_element,
+     [ Any_Of => 1 ]
    );
 }
 
