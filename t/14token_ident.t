@@ -41,7 +41,9 @@ $parser = TestParser->new(
    patterns => { ident => qr/[[:alpha:]_][\w-]+/ },
 );
 
-is( $parser->from_string( "some-ident" ), "some-ident", '"some-ident" passes with new token pattern' );
+is( $parser->from_string( "some-ident" ),
+    "some-ident",
+    '"some-ident" passes with new token pattern' );
 is_deeply( $parser->{spaces}, { }, q("some-ident" spaces) );
 is_deeply( $parser->{tags}, [ [ 0, 10, Ident => 1 ] ], q("some-ident" tags) );
 

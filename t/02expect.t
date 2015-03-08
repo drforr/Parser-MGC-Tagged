@@ -92,6 +92,9 @@ $parser = TestParser->new( toplevel => "parse_numrange" );
 
 is_deeply( $parser->from_string( "123-456" ), [ 123, 456 ], "Number range parser complete" );
 is_deeply( $parser->{spaces}, { }, q("123-456" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 7, Maybe_Expect => 1 ] ],
+  q("123-456" tags) );
 
 {
    my $warnings = "";
@@ -99,6 +102,9 @@ is_deeply( $parser->{spaces}, { }, q("123-456" spaces) );
 
    is_deeply( $parser->from_string( "789" ), [ 789, undef ],   "Number range parser lacking max" );
   is_deeply( $parser->{spaces}, { }, q("789" spaces) );
+  is_deeply( $parser->{tags},
+    [ [ 0, 3, Maybe_Expect => 1 ] ],
+    q("789" tags) );
    is( $warnings, "", "Number range lacking max yields no warnings" );
 }
 
