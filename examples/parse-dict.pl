@@ -34,7 +34,8 @@ sub parse_dict
       $self->expect( ":", [ Expect => 1 ] );
 
       $ret{$key} = $self->parse;
-   } );
+   },
+   [ List_Of => 1 ] );
 
    return \%ret
 }

@@ -88,7 +88,8 @@ sub parse {
     # '6', '7'
     $self->list_of(
       ',',
-      sub { $self->token_int ( Int_14 => 1 ) }
+      sub { $self->token_int ( Int_14 => 1 ) },
+      [ List_Of => 1 ]
     ),
 
     # '8'
