@@ -464,7 +464,12 @@ sub token_ident {
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $self->DEBUG_IN;
+  my $start_pos = $self->pos;
   my $result = $self->SUPER::token_ident( @_ );
+  if ( $self->{spaces}{$start_pos} and
+       $self->{tags}[-1][0] == $start_pos ) {
+    $self->{tags}[-1][0] = $self->{spaces}{$start_pos};
+  }
 $self->DEBUG_OUT;
   return $result;
 }
@@ -477,6 +482,7 @@ sub token_kw {
 
 local $self->{_depth_} = $self->{_depth_} + 1;
 $self->DEBUG_IN;
+  my $start_pos = $self->pos;
   my $result = $self->SUPER::token_kw( @_[ 0 .. $#_ - 1 ] );
 $self->DEBUG_OUT;
   return $result;
