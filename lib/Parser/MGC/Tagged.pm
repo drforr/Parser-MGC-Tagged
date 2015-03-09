@@ -34,11 +34,9 @@ sub _push_tag {
   if ( $rev_spaces{$end_pos} ) {
     $end_pos = $rev_spaces{$end_pos};
   }
-  if ( $start_pos != $end_pos ) {
-    push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ]
-        if defined $tag_name;
-  }
+  push @{ $self->{tags} },
+    [ $start_pos, $end_pos, $tag_name, $tag_value ]
+      if defined $tag_name and $start_pos != $end_pos;
 }
 
 sub new {
@@ -143,14 +141,13 @@ sub sequence_of {
 sub any_of {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  my $in_token_number = (caller(1))[3] eq 'Parser::MGC::token_number';
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ pop() };
   }
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::any_of( @_ );
-  if ( !$in_token_number ) {
+  if ( (caller(1))[3] ne 'Parser::MGC::token_number' ) {
     $self->_push_tag( $start_pos, $tag_name, $tag_value );
   }
   return $result;
