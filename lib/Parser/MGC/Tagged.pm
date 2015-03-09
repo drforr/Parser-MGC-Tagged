@@ -8,6 +8,22 @@ use base 'Parser::MGC';
 
 our $VERSION = '0.12';
 
+sub _push_tag {
+  my $self = shift;
+  my ( $start_pos, $end_pos, $tag_name, $tag_value ) = @_;
+  if ( !defined $tag_name ) {
+    $tag_name = $self->{tag_name};
+    $tag_value = $self->{tag_value};
+  }
+
+  if ( $self->{spaces}{$start_pos} ) {
+    $start_pos = $self->{spaces}{$start_pos};
+  }
+  push @{ $self->{tags} },
+    [ $start_pos, $end_pos, $tag_name, $tag_value ]
+      if defined $tag_name;
+}
+
 sub new {
   my $class = shift;
   my $rv = $class->SUPER::new( @_ );
@@ -74,10 +90,6 @@ sub scope_of {
     $has_aref = 1;
     ( $tag_name, $tag_value ) = @{ $_[-1] };
   }
-  if ( !defined $tag_name ) {
-    $tag_name = $self->{tag_name};
-    $tag_value = $self->{tag_value};
-  }
 
   my $start_pos = $self->pos;
   my $result;
@@ -89,11 +101,7 @@ sub scope_of {
   }
   my $end_pos = $self->pos;
   if ( $start_pos != $end_pos ) {
-    if ( $self->{spaces}{$start_pos} ) {
-      $start_pos = $self->{spaces}{$start_pos};
-    }
-    push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
+    $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
   }
   return $result;
 }
@@ -105,10 +113,6 @@ sub list_of {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     $has_aref = 1;
     ( $tag_name, $tag_value ) = @{ $_[-1] };
-  }
-  if ( !defined $tag_name ) {
-    $tag_name = $self->{tag_name};
-    $tag_value = $self->{tag_value};
   }
 
   my $start_pos = $self->pos;
@@ -124,12 +128,8 @@ sub list_of {
   if ( $rev_spaces{$end_pos} ) {
     $end_pos = $rev_spaces{$end_pos};
   }
-  if ( $self->{spaces}{$start_pos} ) {
-    $start_pos = $self->{spaces}{$start_pos};
-  }
   if ( $start_pos != $end_pos ) {
-    push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
+    $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
   }
   return $result;
 }
@@ -167,11 +167,7 @@ sub any_of {
   }
   my $end_pos = $self->pos;
   if ( !$in_token_number and $start_pos != $end_pos ) {
-    if ( $self->{spaces}{$start_pos} ) {
-      $start_pos = $self->{spaces}{$start_pos};
-    }
-    push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
+    $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
   }
   return $result;
 }
@@ -199,10 +195,6 @@ sub maybe_expect {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ $_[-1] };
   }
-  if ( !defined $tag_name ) {
-    $tag_name = $self->{tag_name};
-    $tag_value = $self->{tag_value};
-  }
 
   if ( wantarray ) {
     my $start_pos = $self->pos;
@@ -221,11 +213,7 @@ sub maybe_expect {
              $self->{spaces}{$start_pos} == $end_pos ) {
         }
         else {
-          if ( $self->{spaces}{$start_pos} ) {
-            $start_pos = $self->{spaces}{$start_pos};
-          }
-          push @{ $self->{tags} },
-            [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
+          $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
         }
       }
     }
@@ -248,11 +236,7 @@ sub maybe_expect {
              $self->{spaces}{$start_pos} == $end_pos ) {
         }
         else {
-          if ( $self->{spaces}{$start_pos} ) {
-            $start_pos = $self->{spaces}{$start_pos};
-          }
-          push @{ $self->{tags} },
-            [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
+          $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
         }
       }
     }
@@ -289,20 +273,12 @@ sub generic_token {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ $_[-1] };
   }
-  if ( !defined $tag_name ) {
-    $tag_name = $self->{tag_name};
-    $tag_value = $self->{tag_value};
-  }
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::generic_token( @_ );
   my $end_pos = $self->pos;
   if ( $start_pos != $end_pos ) {
-    if ( $self->{spaces}{$start_pos} ) {
-      $start_pos = $self->{spaces}{$start_pos};
-    }
-    push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
+    $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
   }
   return $result;
 }
@@ -348,11 +324,7 @@ sub token_string {
   my $start_pos = $self->pos;
   my $result = $self->SUPER::token_string( @_ );
   my $end_pos = $self->pos;
-  if ( $self->{spaces}{$start_pos} ) {
-    $start_pos = $self->{spaces}{$start_pos};
-  }
-  push @{ $self->{tags} },
-    [ $start_pos, $end_pos, $tag_name, $tag_value ] if $tag_name;
+  $self->_push_tag( $start_pos, $end_pos, $tag_name, $tag_value );
   return $result;
 }
 
