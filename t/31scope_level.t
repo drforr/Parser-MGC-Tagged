@@ -71,7 +71,7 @@ is_deeply( $parser->{tags},
     [ 0, 7, Sequence_Of => 1 ] ],
   q("c (d) e" tags) );
 is_deeply( $parser->{delimiters},
-  [ [ 1, 3 ],
+  [ [ 2, 3 ],
     [ 4, 5 ] ],
   q("c (d) e" delimiters) );
 #use YAML;die Dump $parser->{tags};

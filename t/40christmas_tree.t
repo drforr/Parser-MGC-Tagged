@@ -180,7 +180,7 @@ is_deeply( $parser->{tags},
   q("$parse_me" tags) );
 is_deeply( $parser->{delimiters},
   [ [ 68, 69 ],
-    [ 71, 73 ],
+    [ 72, 73 ],
   ],
   q("$parse_me" delimiters) );
 

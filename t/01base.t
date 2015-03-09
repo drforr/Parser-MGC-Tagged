@@ -5,8 +5,6 @@ use warnings;
 
 use Test::More;
 
-#$ENV{DEBUG} = 1;
-
 package TestParser;
 use base qw( Parser::MGC::Tagged );
 
@@ -21,6 +19,7 @@ sub parse
 }
 
 package main;
+#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 

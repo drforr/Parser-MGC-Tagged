@@ -37,7 +37,7 @@ is_deeply( $parser->{spaces},
   { 4 => 5, 7 => 8, 9 => 10, # "here is a list "
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
   },
-  q("here is a list", "of some more ", "tokens" spaces) );
+  q("here is a list ", "of some more ", "tokens" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 4, Expect => 1 ],
     [ 5, 7, Expect => 1 ],
@@ -48,6 +48,6 @@ is_deeply( $parser->{tags},
     [ 23, 27, Expect => 1 ], # "of some more "
     [ 28, 34, Expect => 1 ], # "tokens"
   ],
-  q("here is a list", "of some more ", "tokens" tags) );
+  q("here is a list ", "of some more ", "tokens" tags) );
 
 done_testing;

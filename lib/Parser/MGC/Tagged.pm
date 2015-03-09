@@ -41,15 +41,9 @@ $self->DEBUG_OUT;
    return $result;
 }
 
-sub from_file {
-  my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::from_file( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
+#
+# from_file() wraps from_string().
+#
 
 sub from_reader {
   my $self = shift;
@@ -65,15 +59,9 @@ $self->DEBUG_OUT;
 # pos() is an accessor.
 #
 
-sub where {
-  my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my @result = $self->SUPER::where( @_ );
-$self->DEBUG_OUT;
-  return @result;
-}
+#
+# where() is an accessor.
+#
 
 #
 # fail() simply dies in fail_from()
@@ -83,38 +71,17 @@ $self->DEBUG_OUT;
 # fail_from() simply dies.
 #
 
-sub at_eos {
-  my $self = shift;
+#
+# at_eos() is an accessor.
+#
 
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::at_eos( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
-
-sub scope_level {
-   my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::scope_level( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
+#
+# scope_level() is an accessor.
+#
 
 #
 # maybe() shouldn't tag stuff.
 #
-sub maybe {
-  my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::maybe( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
 
 sub scope_of {
   my $self = shift;
@@ -239,15 +206,9 @@ $self->DEBUG_OUT;
   return $result;
 }
 
-sub commit {
-  my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::commit( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
+#
+# commit() is a leaf.
+#
 
 sub skip_ws {
   my $self = shift;
@@ -288,6 +249,9 @@ $self->DEBUG_IN;
 DEBUG and warn "[" . substr( $self->{str}, $start_pos, $end_pos - $start_pos ) . "]\n";
     if ( $start_pos != $end_pos ) {
       if ( $in_scope_of ) {
+        if ( $self->{spaces}{$start_pos} ) {
+          $start_pos = $self->{spaces}{$start_pos};
+        }
         push @{ $self->{delimiters} },
           [ $start_pos, $end_pos ];
       }
@@ -319,6 +283,9 @@ DEBUG and warn ' ' x $self->{_depth_} . "maybe_expect>\n";
 DEBUG and warn "[" . substr( $self->{str}, $start_pos, $end_pos - $start_pos ) . "]\n";
     if ( $start_pos != $end_pos ) {
       if ( $in_scope_of ) {
+        if ( $self->{spaces}{$start_pos} ) {
+          $start_pos = $self->{spaces}{$start_pos};
+        }
         push @{ $self->{delimiters} },
           [ $start_pos, $end_pos ];
       }
@@ -365,15 +332,9 @@ $self->DEBUG_OUT( 'S' );
   }
 }
 
-sub substring_before {
-  my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::substring_before( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
+#
+# substring_before() is a leaf.
+#
 
 sub generic_token {
   my $self = shift;
@@ -402,15 +363,9 @@ $self->DEBUG_OUT;
   return $result;
 }
 
-sub _token_generic {
-  my $self = shift;
-
-local $self->{_depth_} = $self->{_depth_} + 1;
-$self->DEBUG_IN;
-  my $result = $self->SUPER::_token_generic( @_ );
-$self->DEBUG_OUT;
-  return $result;
-}
+#
+# _token_generic() is an internal method.
+#
 
 sub token_int {
   my $self = shift;

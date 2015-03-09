@@ -96,7 +96,7 @@ is_deeply( $parser->{tags},
 is_deeply( $parser->{delimiters},
   [ [ 0, 1 ],
     [ 4, 5 ],
-    [ 5, 7 ], # XXX
+    [ 6, 7 ],
     [ 10, 11 ] ],
   q("(123) (456)" delimiters) );
 

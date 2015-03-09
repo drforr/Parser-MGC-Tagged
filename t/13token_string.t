@@ -140,8 +140,6 @@ is_deeply( $parser->{tags},
   q(q["double"] tags) );
 
 ok( !eval { $parser->from_string( q['single'] ) }, 'Single quoted string now fails' );
-is_deeply( $parser->{spaces}, { }, q(q['single'] spaces) );
-is_deeply( $parser->{tags}, [ ], q(q['single'] tags) );
 
 $parser = StringPairParser->new;
 
