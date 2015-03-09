@@ -57,7 +57,7 @@ is_deeply( $parser->{spaces},
   q("hello world" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
-    [ 5, 11, Expect_2 => 1 ] ],
+    [ 6, 11, Expect_2 => 1 ] ],
   q("hello world" tags) );
 
 @positions = ( 0, 5, 11 );
@@ -71,7 +71,7 @@ is_deeply( $parser->{spaces},
   q("hello\nworld" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
-    [ 5, 11, Expect_2 => 1 ] ],
+    [ 6, 11, Expect_2 => 1 ] ],
   q("hello\nworld" tags) );
 
 done_testing;

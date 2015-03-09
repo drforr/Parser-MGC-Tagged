@@ -66,7 +66,7 @@ is_deeply( $parser->{tags},
     [ 3, 4, Sequence_Of => 1 ],
     [ 2, 5, Scope_Of => 1 ],
     [ 2, 5, Any_Of => 1 ],
-    [ 5, 7, Expect => 1 ], # XXX Too wide
+    [ 6, 7, Expect => 1 ],
     [ 6, 7, Any_Of => 1 ],
     [ 0, 7, Sequence_Of => 1 ] ],
   q("c (d) e" tags) );

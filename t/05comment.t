@@ -29,7 +29,7 @@ is_deeply( $parser->{spaces},
   q("hello world" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
-    [ 5, 11, Expect_2 => 1 ] ],
+    [ 6, 11, Expect_2 => 1 ] ],
   q("hello world" tags) );
 
 ok( $parser->from_string( "hello\nworld" ), '"hello\nworld"' );
@@ -38,7 +38,7 @@ is_deeply( $parser->{spaces},
   q("hello\nworld" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
-    [ 5, 11, Expect_2 => 1 ] ],
+    [ 6, 11, Expect_2 => 1 ] ],
   q("hello\nworld" tags) );
 
 ok( !eval { $parser->from_string( "hello\n# Comment\nworld" ) },
@@ -55,7 +55,7 @@ is_deeply( $parser->{spaces},
   q("hello\n# Comment\nworld") );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
-    [ 5, 21, Expect_2 => 1 ] ],
+    [ 16, 21, Expect_2 => 1 ] ],
   q("hello\n# Comment\nworld" tags) );
 
 done_testing;

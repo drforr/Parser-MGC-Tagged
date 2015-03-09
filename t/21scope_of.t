@@ -96,7 +96,7 @@ is_deeply( $parser->{tags},
 is_deeply( $parser->{delimiters},
   [ [ 0, 1 ],
     [ 4, 5 ],
-    [ 5, 7 ], # XXX Investigate later
+    [ 5, 7 ], # XXX
     [ 10, 11 ] ],
   q("(123) (456)" delimiters) );
 
@@ -107,7 +107,7 @@ is_deeply( $parser->{spaces}, { }, q("(45)" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Expect => 1 ],
     [ 1, 3, Int => 1 ],
-    [ 1, 4, Scope_Of => 1 ] ], # XXX Not a bug.
+    [ 1, 4, Scope_Of => 1 ] ], # Not a bug.
   q("(45)" tags) );
 is_deeply( $parser->{delimiters},
   [ [ 3, 4 ] ],
@@ -118,7 +118,7 @@ is_deeply( $parser->{spaces}, { }, q("[45]" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 1, Expect => 1 ],
     [ 1, 3, Int => 1 ],
-    [ 1, 4, Scope_Of => 1 ] ], # XXX Not a bug.
+    [ 1, 4, Scope_Of => 1 ] ], # Not a bug.
   q("[45]" tags) );
 is_deeply( $parser->{delimiters},
   [ [ 3, 4 ] ],

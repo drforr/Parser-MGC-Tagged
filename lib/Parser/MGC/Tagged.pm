@@ -328,6 +328,9 @@ DEBUG and warn "[" . substr( $self->{str}, $start_pos, $end_pos - $start_pos ) .
 DEBUG and warn "*** edge case hit\n";
         }
         else {
+          if ( $self->{spaces}{$start_pos} ) {
+            $start_pos = $self->{spaces}{$start_pos};
+          }
           push @{ $self->{tags} },
             [ $start_pos, $end_pos, $tag_name, $tag_value ];
         }
