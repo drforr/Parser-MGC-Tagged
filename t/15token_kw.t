@@ -67,8 +67,6 @@ $parser = TestParser_NoTag->new;
 
 is( $parser->from_string( "foo" ), "foo", 'Keyword' );
 is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, undef, undef ] ],
-  q("foo" tags) );
+is_deeply( $parser->{tags}, [ ], q("foo" tags) );
 
 done_testing;

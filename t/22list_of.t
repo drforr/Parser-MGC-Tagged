@@ -95,9 +95,6 @@ $parser = TestParser_NoTag->new;
 
 is_deeply( $parser->from_string( "123" ), [ 123 ], '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, undef, undef ],
-    [ 0, 3, undef, undef ] ],
-  q("123" tags) );
+is_deeply( $parser->{tags}, [ ], q("123" tags) );
 
 done_testing;

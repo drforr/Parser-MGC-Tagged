@@ -118,9 +118,6 @@ $parser->from_string( "hello world" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, undef, undef ],
-    [ 6, 11, undef, undef ] ],
-  q("hello world" tags) );
+is_deeply( $parser->{tags}, [ ], q("hello world" tags) );
 
 done_testing;

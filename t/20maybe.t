@@ -56,9 +56,7 @@ $parser = TestParser_NoTag->new;
 
 is( $parser->from_string( "hello" ), "hello", '"hello"' );
 is_deeply( $parser->{spaces}, { }, q("hello" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, undef, undef ] ],
-  q("hello" tags) );
+is_deeply( $parser->{tags}, [ ], q("hello" tags) );
 
 $die = "Now have to fail\n";
 ok( !eval { $parser->from_string( "456" ) }, '"456" with $die fails' );

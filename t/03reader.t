@@ -80,16 +80,7 @@ is_deeply( $parser->{spaces},
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
   },
   q("here is a list ", "of some more ", "tokens" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 4, undef, undef ],
-    [ 5, 7, undef, undef ],
-    [ 8, 9, undef, undef ],
-    [ 10, 14, undef, undef ], # "here is a list "
-    [ 15, 17, undef, undef ],
-    [ 18, 22, undef, undef ],
-    [ 23, 27, undef, undef ], # "of some more "
-    [ 28, 34, undef, undef ], # "tokens"
-  ],
+is_deeply( $parser->{tags}, [ ],
   q("here is a list ", "of some more ", "tokens" tags) );
 
 done_testing;

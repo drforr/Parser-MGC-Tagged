@@ -144,10 +144,7 @@ $parser = TestParser_NoTag->new;
 
 is( $parser->from_string( "(123)" ), 123, '"(123)"' );
 is_deeply( $parser->{spaces}, { }, q("(123)" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 1, 4, undef, undef ],
-    [ 0, 5, undef, undef ] ],
-  q("(123)" tags) );
+is_deeply( $parser->{tags}, [ ], q("(123)" tags) );
 is_deeply( $parser->{delimiters},
   [ [ 0, 1 ],
     [ 4, 5 ] ],

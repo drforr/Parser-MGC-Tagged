@@ -28,9 +28,15 @@ sub from_string {
 # from_file() wraps from_string().
 #
 
-#
-# from_reader() wraps parse()
-#
+sub from_reader {
+  my $self = shift;
+  $self->{spaces} = { };
+  $self->{tags} = [ ]; # There could be multiple tags starting at a given offset
+  $self->{delimiters} = [ ]; # Save these for later?
+
+   my $result = $self->SUPER::from_reader( @_ );
+   return $result;
+}
 
 #
 # pos() is an accessor.
@@ -87,7 +93,7 @@ sub scope_of {
       $start_pos = $self->{spaces}{$start_pos};
     }
     push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
   }
   return $result;
 }
@@ -123,7 +129,7 @@ sub list_of {
   }
   if ( $start_pos != $end_pos ) {
     push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
   }
   return $result;
 }
@@ -165,7 +171,7 @@ sub any_of {
       $start_pos = $self->{spaces}{$start_pos};
     }
     push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
   }
   return $result;
 }
@@ -219,7 +225,7 @@ sub maybe_expect {
             $start_pos = $self->{spaces}{$start_pos};
           }
           push @{ $self->{tags} },
-            [ $start_pos, $end_pos, $tag_name, $tag_value ];
+            [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
         }
       }
     }
@@ -246,7 +252,7 @@ sub maybe_expect {
             $start_pos = $self->{spaces}{$start_pos};
           }
           push @{ $self->{tags} },
-            [ $start_pos, $end_pos, $tag_name, $tag_value ];
+            [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
         }
       }
     }
@@ -296,7 +302,7 @@ sub generic_token {
       $start_pos = $self->{spaces}{$start_pos};
     }
     push @{ $self->{tags} },
-      [ $start_pos, $end_pos, $tag_name, $tag_value ];
+      [ $start_pos, $end_pos, $tag_name, $tag_value ] if defined $tag_name;
   }
   return $result;
 }
@@ -345,7 +351,8 @@ sub token_string {
   if ( $self->{spaces}{$start_pos} ) {
     $start_pos = $self->{spaces}{$start_pos};
   }
-  push @{ $self->{tags} }, [ $start_pos, $end_pos, $tag_name, $tag_value ];
+  push @{ $self->{tags} },
+    [ $start_pos, $end_pos, $tag_name, $tag_value ] if $tag_name;
   return $result;
 }
 

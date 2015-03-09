@@ -58,8 +58,6 @@ is_deeply( $parser->from_string( "Hello, world!" ),
 is_deeply( $parser->{spaces},
   { },
   q("Hello, world!" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 12, 13, undef, undef ] ],
-  q("Hello, world!" tags) );
+is_deeply( $parser->{tags}, [ ], q("Hello, world!" tags) );
 
 done_testing;

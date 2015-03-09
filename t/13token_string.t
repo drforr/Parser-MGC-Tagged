@@ -151,14 +151,6 @@ is_deeply( $parser->{tags},
 
 ok( !eval { $parser->from_string( q['single'] ) }, 'Single quoted string now fails' );
 
-$parser = TestParser_NoTag->new;
-
-is( $parser->from_string( q['single'] ), "single", 'Single quoted string' );
-is_deeply( $parser->{spaces}, { }, q(q['single'] spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 8, undef, undef ] ],
-  q(q['single'] tags) );
-
 $parser = StringPairParser->new;
 
 is_deeply( $parser->from_string( q["foo" "bar"] ),
@@ -171,5 +163,11 @@ is_deeply( $parser->{tags},
   [ [ 0, 5, String_1 => 1 ],
     [ 6, 11, String_2 => 1 ] ],
   q(q["foo" "bar"] tags) );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( q['single'] ), "single", 'Single quoted string' );
+is_deeply( $parser->{spaces}, { }, q(q['single'] spaces) );
+is_deeply( $parser->{tags}, [ ], q(q['single'] tags) );
 
 done_testing;

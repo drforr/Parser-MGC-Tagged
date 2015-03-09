@@ -121,8 +121,6 @@ $parser = TestParser_NoTag->new;
 
 approx( $parser->from_string( "123.0" ), 123,    'Decimal integer' );
 is_deeply( $parser->{spaces}, { }, q("123.0" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, undef, undef ] ],
-  q("123.0" tags) );
+is_deeply( $parser->{tags}, [ ], q("123.0" tags) );
 
 done_testing;

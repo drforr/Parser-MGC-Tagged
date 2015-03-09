@@ -65,8 +65,6 @@ $parser = TestParser_NoTag->new;
 $re_NoTag = qr/[A-Z]+/;
 is( $parser->from_string( "HELLO" ), "HELLO", 'Simple RE' );
 is_deeply( $parser->{spaces}, { }, q("HELLO" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, undef, undef ] ],
-  q("HELLO" tags) );
+is_deeply( $parser->{tags}, [ ], q("HELLO" tags) );
 
 done_testing;
