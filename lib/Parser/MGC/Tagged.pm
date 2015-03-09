@@ -24,8 +24,7 @@ sub _push_tag {
   my ( $start_pos, $tag_name, $tag_value ) = @_;
   my $end_pos = $self->pos;
   if ( !defined $tag_name ) {
-    $tag_name = $self->{tag_name};
-    $tag_value = $self->{tag_value};
+    ( $tag_name, $tag_value ) = @{ $self->{tag_stack} };
   }
 
   if ( $self->{spaces}{$start_pos} ) {
@@ -48,14 +47,20 @@ sub new {
   return $rv;
 }
 
-sub from_string {
+sub _init {
   my $self = shift;
+
   $self->{spaces} = { };
   $self->{tags} = [ ]; # There could be multiple tags starting at a given offset
   $self->{delimiters} = [ ]; # Save these for later?
+  $self->{tag_stack} = [ ];
+}
 
-   my $result = $self->SUPER::from_string( @_ );
-   return $result;
+sub from_string {
+  my $self = shift;
+  $self->_init;
+
+  return $self->SUPER::from_string( @_ );
 }
 
 #
@@ -64,12 +69,9 @@ sub from_string {
 
 sub from_reader {
   my $self = shift;
-  $self->{spaces} = { };
-  $self->{tags} = [ ]; # There could be multiple tags starting at a given offset
-  $self->{delimiters} = [ ]; # Save these for later?
+  $self->_init;
 
-   my $result = $self->SUPER::from_reader( @_ );
-   return $result;
+  return $self->SUPER::from_reader( @_ );
 }
 
 #
@@ -132,8 +134,7 @@ sub sequence_of {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ pop() };
   }
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $result = $self->SUPER::sequence_of( @_ );
   return $result;
@@ -216,8 +217,7 @@ sub expect {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ pop() };
   }
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   if ( wantarray ) {
     my @result = $self->SUPER::expect( @_ );
@@ -253,8 +253,7 @@ sub generic_token {
 sub token_int {
   my $self = shift;
   my ( $tag_name, $tag_value ) = @_;
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $result = $self->SUPER::token_int( @_ );
   return $result;
@@ -263,8 +262,7 @@ sub token_int {
 sub token_float {
   my $self = shift;
   my ( $tag_name, $tag_value ) = @_;
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $result = $self->SUPER::token_float( @_ );
   return $result;
@@ -273,8 +271,7 @@ sub token_float {
 sub token_number {
   my $self = shift;
   my ( $tag_name, $tag_value ) = @_;
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $result = $self->SUPER::token_number( @_ );
   return $result;
@@ -294,11 +291,9 @@ sub token_ident {
   my $self = shift;
   my ( $tag_name, $tag_value ) = @_;
   if ( !defined $tag_name ) {
-    $tag_name = $self->{tag_name};
-    $tag_value = $self->{tag_value};
+    ( $tag_name, $tag_value ) = @{ $self->{tag_stack} };
   }
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::token_ident( @_ );
@@ -315,8 +310,7 @@ sub token_kw {
   if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
     ( $tag_name, $tag_value ) = @{ pop() };
   }
-  local $self->{tag_name} = $tag_name;
-  local $self->{tag_value} = $tag_value;
+  local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $result = $self->SUPER::token_kw( @_ );
   return $result;
