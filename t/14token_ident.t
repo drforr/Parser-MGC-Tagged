@@ -15,6 +15,16 @@ sub parse
    return $self->token_ident( Ident => 1 );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return $self->token_ident;
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -52,5 +62,13 @@ is_deeply( $parser->{spaces}, { }, q("some-ident" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 10, Ident => 1 ] ],
   q("some-ident" tags) );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( "foo" ), "foo", 'Identifier' );
+is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, undef, undef ] ],
+  q("foo" tags) );
 
 done_testing;

@@ -40,6 +40,18 @@ sub parse_numrange
                                    [ Maybe_Expect => 1 ] ) )[1,2] ];
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse_hello
+{
+   my $self = shift;
+
+   [ $self->expect( "hello" ),
+     $self->expect( qr/world/ )
+   ];
+}
+
 package main;
 #$ENV{DEBUG}=1;
 
@@ -119,5 +131,18 @@ is_deeply( $parser->{tags},
     q("789" tags) );
    is( $warnings, "", "Number range lacking max yields no warnings" );
 }
+
+$parser = TestParser_NoTag->new( toplevel => "parse_hello" );
+
+is_deeply( $parser->from_string( "hello world" ),
+   [ "hello", "world" ],
+   '"hello world"' );
+is_deeply( $parser->{spaces},
+  { 5 => 6 },
+  q("hello world" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, undef, undef ],
+    [ 6, 11, undef, undef ] ],
+  q("hello world" tags) );
 
 done_testing;

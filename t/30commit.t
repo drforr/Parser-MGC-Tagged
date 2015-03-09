@@ -27,6 +27,26 @@ sub parse
    );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   $self->any_of(
+      sub { $self->token_int },
+      sub {
+         $self->scope_of( "(",
+            sub {
+               $self->commit;
+               $self->token_string;
+            },
+            ")" );
+      }
+   );
+}
+
 package IntStringPairsParser;
 use base qw( Parser::MGC::Tagged );
 
@@ -98,5 +118,14 @@ is( $@,
     qq[1 'one' 2\n].
     qq[         ^\n],
     'Exception from 1 \'one\' 2 failure' );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( "123" ), 123, '"123"' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, undef, undef ],
+    [ 0, 3, undef, undef ] ],
+  q("123" tags) );
 
 done_testing;

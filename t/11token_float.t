@@ -15,6 +15,16 @@ sub parse
    return $self->token_float( Float => 1 );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return $self->token_float;
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -106,5 +116,13 @@ is_deeply( $parser->{spaces}, { }, q("1e0" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 3, Float => 1 ] ],
   q("1e0" tags) );
+
+$parser = TestParser_NoTag->new;
+
+approx( $parser->from_string( "123.0" ), 123,    'Decimal integer' );
+is_deeply( $parser->{spaces}, { }, q("123.0" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, undef, undef ] ],
+  q("123.0" tags) );
 
 done_testing;

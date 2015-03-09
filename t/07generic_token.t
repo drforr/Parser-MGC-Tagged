@@ -19,6 +19,19 @@ sub parse
      token => $re, $convert, [ Generic_Token => 1 ] );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+my $re_NoTag;
+my $convert_NoTag;
+
+sub parse
+{
+   my $self = shift;
+
+   return $self->generic_token( token => $re_NoTag, $convert_NoTag );
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -46,5 +59,14 @@ is_deeply( $parser->{spaces}, { }, q("hello" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 5, Generic_Token => 1 ] ],
   q("hello" tags) );
+
+$parser = TestParser_NoTag->new;
+
+$re_NoTag = qr/[A-Z]+/;
+is( $parser->from_string( "HELLO" ), "HELLO", 'Simple RE' );
+is_deeply( $parser->{spaces}, { }, q("HELLO" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, undef, undef ] ],
+  q("HELLO" tags) );
 
 done_testing;

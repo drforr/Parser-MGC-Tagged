@@ -20,6 +20,20 @@ sub parse
    );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   $self->scope_of(
+      "(",
+      sub { return $self->token_int },
+      ")"
+   );
+}
+
 package TestParser2;
 use base qw( Parser::MGC::Tagged );
 
@@ -125,5 +139,18 @@ is_deeply( $parser->{delimiters},
   q("[45]" delimiters) );
 
 ok( !eval { $parser->from_string( "(45]" ) }, '"(45]" fails' );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( "(123)" ), 123, '"(123)"' );
+is_deeply( $parser->{spaces}, { }, q("(123)" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 1, 4, undef, undef ],
+    [ 0, 5, undef, undef ] ],
+  q("(123)" tags) );
+is_deeply( $parser->{delimiters},
+  [ [ 0, 1 ],
+    [ 4, 5 ] ],
+  q("(123)" delimiters) );
 
 done_testing;

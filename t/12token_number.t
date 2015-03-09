@@ -15,6 +15,16 @@ sub parse
    return $self->token_number( Number => 1 );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return $self->token_number;
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -67,5 +77,14 @@ is_deeply( $parser->{tags},
   q("8.9" tags) );
 
 ok( !eval { $parser->from_string( "hello" ) }, '"hello" fails' );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( "123" ), 123, 'Decimal integer' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, undef, undef ] ],
+  q("123" tags) );
+#use YAML;die Dump $parser->{tags};
 
 done_testing;

@@ -18,6 +18,18 @@ sub parse
    [ Sequence_Of => 1 ] );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   $self->sequence_of( sub {
+      return $self->token_int
+   } );
+}
+
 package IntThenStringParser;
 use base qw( Parser::MGC::Tagged );
 
@@ -101,5 +113,14 @@ is_deeply( $parser->{tags},
     [ 5, 9, String => 1 ],
     [ 0, 9, Sequence_Of => 1 ] ],
   q("'ab' 'cd'" tags) );
+
+$parser = TestParser_NoTag->new;
+ 
+is_deeply( $parser->from_string( "123" ), [ 123 ], '"123"' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, undef, undef ],
+    [ 0, 3, undef, undef ] ],
+  q("123" tags) );
 
 done_testing;

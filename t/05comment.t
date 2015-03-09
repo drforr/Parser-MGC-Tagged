@@ -18,6 +18,19 @@ sub parse
    return 1;
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   $self->expect( "hello" );
+   $self->expect( qr/world/ );
+
+   return 1;
+}
+
 package main;
 #$ENV{DEBUG}=1;
 
@@ -57,5 +70,16 @@ is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
     [ 16, 21, Expect_2 => 1 ] ],
   q("hello\n# Comment\nworld" tags) );
+
+$parser = TestParser_NoTag->new;
+
+ok( $parser->from_string( "hello world" ), '"hello world"' );
+is_deeply( $parser->{spaces},
+  { 5 => 6 },
+  q("hello world" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 5, undef, undef ],
+    [ 6, 11, undef, undef ] ],
+  q("hello world" tags) );
 
 done_testing;

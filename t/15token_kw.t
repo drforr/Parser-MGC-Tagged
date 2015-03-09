@@ -15,6 +15,16 @@ sub parse
    return $self->token_kw( qw( foo bar ), [ Kw => 1 ] );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return $self->token_kw( qw( foo bar ) );
+}
+
 package TestParser2;
 use base qw( Parser::MGC::Tagged );
 
@@ -52,5 +62,13 @@ is_deeply( $parser->{tags},
   [ [ 0, 3, Kw_1 => 1 ],
     [ 4, 7, Kw_2 => 1 ] ],
   q("foo bar" tags) );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( "foo" ), "foo", 'Keyword' );
+is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, undef, undef ] ],
+  q("foo" tags) );
 
 done_testing;

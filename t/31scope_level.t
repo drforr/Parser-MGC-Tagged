@@ -24,6 +24,23 @@ sub parse
    );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   $self->sequence_of( 
+      sub {
+         $self->any_of(
+            sub { $self->expect( qr/[a-z]+/ ) . "/" . $self->scope_level },
+            sub { $self->scope_of( "(", \&parse, ")" ) }
+         );
+      }
+   );
+}
+
 package main;
 #$ENV{DEBUG} = 1;
 
@@ -75,5 +92,15 @@ is_deeply( $parser->{delimiters},
     [ 4, 5 ] ],
   q("c (d) e" delimiters) );
 #use YAML;die Dump $parser->{tags};
+
+$parser = TestParser_NoTag->new;
+
+is_deeply( $parser->from_string( "a" ), [ "a/0" ], 'a' );
+is_deeply( $parser->{spaces}, { }, q("a" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 1, undef, undef ],
+    [ 0, 1, undef, undef ],
+    [ 0, 1, undef, undef ] ],
+  q("a" tags) );
 
 done_testing;

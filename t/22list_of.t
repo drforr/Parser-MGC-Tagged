@@ -18,6 +18,18 @@ sub parse
    [ List_Of => 1 ] );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   $self->list_of( ",", sub {
+      return $self->token_int
+   } );
+}
+
 package TestParser2;
 use base qw( Parser::MGC::Tagged );
 
@@ -78,5 +90,14 @@ is_deeply( $parser->{tags},
     [ 4, 7, Int => 1 ],
     [ 4, 7, List_Of => 1 ] ],
   q("123 456" tags) );
+
+$parser = TestParser_NoTag->new;
+
+is_deeply( $parser->from_string( "123" ), [ 123 ], '"123"' );
+is_deeply( $parser->{spaces}, { }, q("123" spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 3, undef, undef ],
+    [ 0, 3, undef, undef ] ],
+  q("123" tags) );
 
 done_testing;

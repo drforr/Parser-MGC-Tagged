@@ -15,6 +15,16 @@ sub parse
    return $self->token_string( String => 1 );
 }
 
+package TestParser_NoTag;
+use base qw( Parser::MGC::Tagged );
+
+sub parse
+{
+   my $self = shift;
+
+   return $self->token_string;
+}
+
 package StringPairParser;
 use base qw( Parser::MGC::Tagged );
 
@@ -140,6 +150,14 @@ is_deeply( $parser->{tags},
   q(q["double"] tags) );
 
 ok( !eval { $parser->from_string( q['single'] ) }, 'Single quoted string now fails' );
+
+$parser = TestParser_NoTag->new;
+
+is( $parser->from_string( q['single'] ), "single", 'Single quoted string' );
+is_deeply( $parser->{spaces}, { }, q(q['single'] spaces) );
+is_deeply( $parser->{tags},
+  [ [ 0, 8, undef, undef ] ],
+  q(q['single'] tags) );
 
 $parser = StringPairParser->new;
 
