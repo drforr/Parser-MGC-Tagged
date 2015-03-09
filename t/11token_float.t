@@ -42,10 +42,10 @@ is_deeply( $parser->{tags},
   q("0.0" tags) );
 
 approx( $parser->from_string( "12." ),    12,    'Trailing DP' );
-is_deeply( $parser->{spaces}, { }, q("12" spaces) );
+is_deeply( $parser->{spaces}, { }, q("12." spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 3, Float => 1 ] ],
-  q("12" tags) );
+  q("12." tags) );
 
 approx( $parser->from_string( ".34" ),     0.34, 'Leading DP' );
 is_deeply( $parser->{spaces}, { }, q(".34" spaces) );

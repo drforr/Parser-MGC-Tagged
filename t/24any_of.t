@@ -60,11 +60,11 @@ is_deeply( $parser->{tags},
   q("123" tags) );
 
 is_deeply( $parser->from_string( q["hi"] ), [ str => "hi" ], '"hi"' );
-is_deeply( $parser->{spaces}, { }, q("hi" spaces) );
+is_deeply( $parser->{spaces}, { }, q(q["hi"] spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 4, String => 1 ],
     [ 0, 4, Any_Of => 1 ] ],
-  q("hi" tags) );
+  q(q["hi"] tags) );
 
 is_deeply( $parser->from_string( "foobar" ),
   [ ident => "foobar" ],
