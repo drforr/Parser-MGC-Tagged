@@ -12,9 +12,8 @@ sub _push_delimiters {
   my $self = shift;
   my ( $start_pos, $end_pos ) = @_;
 
-  if ( $self->{spaces}{$start_pos} ) {
-    $start_pos = $self->{spaces}{$start_pos};
-  }
+  $start_pos = $self->{spaces}{$start_pos}
+    if $self->{spaces}{$start_pos};
   push @{ $self->{delimiters} },
     [ $start_pos, $end_pos ];
 }
@@ -23,34 +22,26 @@ sub _push_tag {
   my $self = shift;
   my ( $start_pos, $tag_name, $tag_value ) = @_;
   my $end_pos = $self->pos;
-  if ( !defined $tag_name ) {
-    ( $tag_name, $tag_value ) = @{ $self->{tag_stack} };
-  }
+  ( $tag_name, $tag_value ) = @{ $self->{tag_stack} }
+    if !defined $tag_name;
+  return unless defined $tag_name;
 
-  if ( $self->{spaces}{$start_pos} ) {
-    $start_pos = $self->{spaces}{$start_pos};
-  }
+  $start_pos = $self->{spaces}{$start_pos}
+    if $self->{spaces}{$start_pos};
   my %rev_spaces = reverse %{ $self->{spaces} }; # XXX This might be brittle
-  if ( $rev_spaces{$end_pos} ) {
-    $end_pos = $rev_spaces{$end_pos};
-  }
+  $end_pos = $rev_spaces{$end_pos}
+    if $rev_spaces{$end_pos};
   push @{ $self->{tags} },
     [ $start_pos, $end_pos, $tag_name, $tag_value ]
-      if defined $tag_name and $start_pos != $end_pos;
-}
-
-sub new {
-  my $class = shift;
-  my $rv = $class->SUPER::new( @_ );
-  return $rv;
+      if $start_pos != $end_pos;
 }
 
 sub _init {
   my $self = shift;
 
   $self->{spaces} = { };
-  $self->{tags} = [ ]; # There could be multiple tags starting at a given offset
-  $self->{delimiters} = [ ]; # Save these for later?
+  $self->{tags} = [ ];
+  $self->{delimiters} = [ ];
   $self->{tag_stack} = [ ];
 }
 
@@ -103,9 +94,8 @@ sub from_reader {
 sub scope_of {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::scope_of( @_ );
@@ -116,9 +106,8 @@ sub scope_of {
 sub list_of {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::list_of( @_ );
@@ -129,9 +118,8 @@ sub list_of {
 sub sequence_of {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
   my $result = $self->SUPER::sequence_of( @_ );
@@ -141,15 +129,13 @@ sub sequence_of {
 sub any_of {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::any_of( @_ );
-  if ( (caller(1))[3] ne 'Parser::MGC::token_number' ) {
-    $self->_push_tag( $start_pos, $tag_name, $tag_value );
-  }
+  $self->_push_tag( $start_pos, $tag_name, $tag_value )
+    if (caller(1))[3] ne 'Parser::MGC::token_number';
   return $result;
 }
 
@@ -163,47 +149,43 @@ sub skip_ws {
   my $start_pos = $self->pos;
   my $result = $self->SUPER::skip_ws( @_ );
   my $end_pos = $self->pos;
-  if ( $start_pos != $end_pos ) {
-    $self->{spaces}{$start_pos} = $end_pos;
-  }
+  $self->{spaces}{$start_pos} = $end_pos
+    if $start_pos != $end_pos;
   return $result;
+}
+
+sub _push_contents {
+  my $self = shift;
+  my ( $start_pos, $in_scope_of, $tag_name, $tag_value ) = @_;
+
+  my $end_pos = $self->pos;
+  if ( $in_scope_of ) {
+    $self->_push_delimiters( $start_pos, $end_pos );
+  }
+  else {
+    unless ( $self->{spaces}{$start_pos} and
+             $self->{spaces}{$start_pos} == $end_pos ) {
+      $self->_push_tag( $start_pos, $tag_name, $tag_value );
+    }
+  }
 }
 
 sub maybe_expect {
   my $self = shift;
   my ( $tag_name, $tag_value );
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
   my $in_scope_of = (caller(3))[3] eq 'Parser::MGC::scope_of';
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
 
   my $start_pos = $self->pos;
   if ( wantarray ) {
     my @result = $self->SUPER::maybe_expect( @_ );
-    my $end_pos = $self->pos;
-    if ( $in_scope_of ) {
-      $self->_push_delimiters( $start_pos, $end_pos );
-    }
-    else {
-      unless ( $self->{spaces}{$start_pos} and
-               $self->{spaces}{$start_pos} == $end_pos ) {
-        $self->_push_tag( $start_pos, $tag_name, $tag_value );
-      }
-    }
+    $self->_push_contents( $start_pos, $in_scope_of, $tag_name, $tag_value );
     return @result;
   }
   else {
     my $result = $self->SUPER::maybe_expect( @_ );
-    my $end_pos = $self->pos;
-    if ( $in_scope_of ) {
-      $self->_push_delimiters( $start_pos, $end_pos );
-    }
-    else {
-      unless ( $self->{spaces}{$start_pos} and
-               $self->{spaces}{$start_pos} == $end_pos ) {
-        $self->_push_tag( $start_pos, $tag_name, $tag_value );
-      }
-    }
+    $self->_push_contents( $start_pos, $in_scope_of, $tag_name, $tag_value );
     return $result;
   }
 }
@@ -211,19 +193,11 @@ sub maybe_expect {
 sub expect {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  if ( wantarray ) {
-    my @result = $self->SUPER::expect( @_ );
-    return @result;
-  }
-  else {
-    my $result = $self->SUPER::expect( @_ );
-    return $result;
-  }
+  return $self->SUPER::expect( @_ );
 }
 
 #
@@ -233,9 +207,8 @@ sub expect {
 sub generic_token {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
 
   my $start_pos = $self->pos;
   my $result = $self->SUPER::generic_token( @_ );
@@ -252,8 +225,7 @@ sub token_int {
   my ( $tag_name, $tag_value ) = @_;
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  my $result = $self->SUPER::token_int( @_ );
-  return $result;
+  return $self->SUPER::token_int( @_ );
 }
 
 sub token_float {
@@ -261,8 +233,7 @@ sub token_float {
   my ( $tag_name, $tag_value ) = @_;
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  my $result = $self->SUPER::token_float( @_ );
-  return $result;
+  return $self->SUPER::token_float( @_ );
 }
 
 sub token_number {
@@ -270,8 +241,7 @@ sub token_number {
   my ( $tag_name, $tag_value ) = @_;
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  my $result = $self->SUPER::token_number( @_ );
-  return $result;
+  return $self->SUPER::token_number( @_ );
 }
 
 sub token_string {
@@ -287,30 +257,21 @@ sub token_string {
 sub token_ident {
   my $self = shift;
   my ( $tag_name, $tag_value ) = @_;
-  if ( !defined $tag_name ) {
-    ( $tag_name, $tag_value ) = @{ $self->{tag_stack} };
-  }
+  ( $tag_name, $tag_value ) = @{ $self->{tag_stack} }
+    if !defined $tag_name;
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  my $start_pos = $self->pos;
-  my $result = $self->SUPER::token_ident( @_ );
-  if ( $self->{spaces}{$start_pos} and
-       $self->{tags}[-1][0] == $start_pos ) {
-    $self->{tags}[-1][0] = $self->{spaces}{$start_pos};
-  }
-  return $result;
+  return $self->SUPER::token_ident( @_ );
 }
 
 sub token_kw {
   my $self = shift;
   my ( $tag_name, $tag_value );
-  if ( ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY' ) {
-    ( $tag_name, $tag_value ) = @{ pop() };
-  }
+  ( $tag_name, $tag_value ) = @{ pop() }
+    if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  my $result = $self->SUPER::token_kw( @_ );
-  return $result;
+  return $self->SUPER::token_kw( @_ );
 }
 
 1;
