@@ -122,8 +122,7 @@ sub sequence_of {
     if ref( $_[-1] ) and ref( $_[-1] ) eq 'ARRAY';
   local $self->{tag_stack} = [ $tag_name, $tag_value ];
 
-  my $result = $self->SUPER::sequence_of( @_ );
-  return $result;
+  return $self->SUPER::sequence_of( @_ );
 }
 
 sub any_of {
