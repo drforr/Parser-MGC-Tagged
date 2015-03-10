@@ -76,7 +76,6 @@ sub parse
 }
 
 package main;
-#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 
@@ -113,6 +112,22 @@ is_deeply( $parser->{delimiters},
     [ 6, 7 ],
     [ 10, 11 ] ],
   q("(123) (456)" delimiters) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("hello world" tagged) );
+  is_deeply( $tagged->get_tags_at( 0 ),
+             { Scope_Of => 1 },
+             q("(123) (456)" starting first tag) );
+  is_deeply( $tagged->get_tags_at( 1 ),
+             { Int => 1, Scope_Of => 1 },
+             q("(123) (456)" starting first tag) );
+  is_deeply( $tagged->get_tags_at( 3 ),
+             { Int => 1, Scope_Of => 1 },
+             q("(123) (456)" starting first tag) );
+  is_deeply( $tagged->get_tags_at( 4 ),
+             { Scope_Of => 1 },
+             q("(123) (456)" starting first tag) );
+}
 
 $parser = DynamicDelimParser->new;
 

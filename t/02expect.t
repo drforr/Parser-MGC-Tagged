@@ -53,7 +53,6 @@ sub parse_hello
 }
 
 package main;
-#$ENV{DEBUG}=1;
 
 my $parser = TestParser->new( toplevel => "parse_hello" );
 
@@ -67,6 +66,22 @@ is_deeply( $parser->{tags},
   [ [ 0, 5, Expect_1 => 1 ],
     [ 6, 11, Expect_2 => 1 ] ],
   q("hello world" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("hello world" tagged) );
+  is_deeply( $tagged->get_tags_at( 0 ),
+             { Expect_1 => 1 },
+             q("hello world" starting first tag) );
+  is_deeply( $tagged->get_tags_at( 4 ),
+             { Expect_1 => 1 },
+             q("hello world" ending first tag) );
+  is_deeply( $tagged->get_tags_at( 6 ),
+             { Expect_2 => 1 },
+             q("hello world" starting last tag) );
+  is_deeply( $tagged->get_tags_at( 10 ),
+             { Expect_2 => 1 },
+             q("hello world" ending last tag) );
+}
 
 is_deeply( $parser->from_string( "  hello world  " ),
    [ "hello", "world" ],

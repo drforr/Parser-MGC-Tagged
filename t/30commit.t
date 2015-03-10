@@ -66,7 +66,6 @@ sub parse
 }
 
 package main;
-#$ENV{DEBUG} = 1;
 
 my $parser = TestParser->new;
 

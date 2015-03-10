@@ -4,6 +4,8 @@ package Parser::MGC::Tagged;
 
 use base 'Parser::MGC';
 
+use String::Tagged;
+
 # ABSTRACT: foo
 
 our $VERSION = '0.12';
@@ -43,6 +45,18 @@ sub _init {
   $self->{tags} = [ ];
   $self->{delimiters} = [ ];
   $self->{tag_stack} = [ ];
+}
+
+sub tagged {
+  my $self = shift;
+  
+  my $str = String::Tagged->new( $self->{str} );
+  for my $tag ( @{ $self->{tags} } ) {
+    my @tag = @$tag;
+    $tag[1] = $tag[1] - $tag[0];
+    $str->apply_tag( @tag );
+  }
+  return $str;
 }
 
 sub from_string {
