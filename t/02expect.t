@@ -62,25 +62,13 @@ is_deeply( $parser->from_string( "hello world" ),
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, Expect_1 => 1 ],
-    [ 6, 11, Expect_2 => 1 ] ],
-  q("hello world" tags) );
 {
   my $tagged = $parser->tagged;
   isa_ok( $tagged, 'String::Tagged', q("hello world" tagged) );
-  is_deeply( $tagged->get_tags_at( 0 ),
-             { Expect_1 => 1 },
-             q("hello world" starting first tag) );
-  is_deeply( $tagged->get_tags_at( 4 ),
-             { Expect_1 => 1 },
-             q("hello world" ending first tag) );
-  is_deeply( $tagged->get_tags_at( 6 ),
-             { Expect_2 => 1 },
-             q("hello world" starting last tag) );
-  is_deeply( $tagged->get_tags_at( 10 ),
-             { Expect_2 => 1 },
-             q("hello world" ending last tag) );
+  is( $tagged->get_tag_at( 0, 'Expect_1' ), 1, q("hello world" tag 1 start) );
+  is( $tagged->get_tag_at( 4, 'Expect_1' ), 1, q("hello world" tag 1 end) );
+  is( $tagged->get_tag_at( 6, 'Expect_2' ), 1, q("hello world" tag 2 start) );
+  is( $tagged->get_tag_at( 10, 'Expect_2' ), 1, q("hello world" tag 2 end) );
 }
 
 is_deeply( $parser->from_string( "  hello world  " ),
@@ -91,10 +79,18 @@ is_deeply( $parser->{spaces},
     7 => 8,
     13 => 15 },
   q("  hello world  " spaces) );
-is_deeply( $parser->{tags},
-  [ [ 2, 7, Expect_1 => 1 ],
-    [ 8, 13, Expect_2 => 1 ] ],
-  q("  hello world  " tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("  hello world  " tagged) );
+  is( $tagged->get_tag_at( 2, 'Expect_1' ), 1,
+      q("  hello world  " tag 1 start) );
+  is( $tagged->get_tag_at( 6, 'Expect_1' ), 1,
+      q("  hello world  " tag 1 end) );
+  is( $tagged->get_tag_at( 8, 'Expect_2' ), 1,
+      q("  hello world  " tag 2 start) );
+  is( $tagged->get_tag_at( 12, 'Expect_2' ), 1,
+      q("  hello world  " tag 2 end) );
+}
 
 # Perl 5.13.6 changed the regexp form
 # Accept both old and new-style stringification
@@ -111,29 +107,43 @@ $parser = TestParser->new( toplevel => "parse_hex" );
 
 is( $parser->from_string( "0x123" ), 0x123, "Hex parser captures substring" );
 is_deeply( $parser->{spaces}, { }, q("0x123" spaces) );
-is_deeply( $parser->{tags}, [ [ 0, 5, Expect => 1 ] ], q("0x123" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("0x123" tagged) );
+  is( $tagged->get_tag_at( 0, 'Expect' ), 1, q("0x123" tag start) );
+  is( $tagged->get_tag_at( 4, 'Expect' ), 1, q("0x123" tag end) );
+}
 
 $parser = TestParser->new( toplevel => "parse_foo_or_bar" );
 
 is( $parser->from_string( "Foo" ), "Foo", "FooBar parser first case" );
 is_deeply( $parser->{spaces}, { }, q("Foo" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, Maybe_Expect_1 => 1 ] ],
-  q("Foo" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("Foo" tagged) );
+  is( $tagged->get_tag_at( 0, 'Maybe_Expect_1' ), 1, q("Foo" tag start) );
+  is( $tagged->get_tag_at( 2, 'Maybe_Expect_1' ), 1, q("Foo" tag end) );
+}
 
 is( $parser->from_string( "Bar" ), "Bar", "FooBar parser first case" );
 is_deeply( $parser->{spaces}, { }, q("Bar" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, Maybe_Expect_2 => 1 ] ],
-  q("Bar" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("Bar" tagged) );
+  is( $tagged->get_tag_at( 0, 'Maybe_Expect_2' ), 1, q("Bar" tag start) );
+  is( $tagged->get_tag_at( 2, 'Maybe_Expect_2' ), 1, q("Bar" tag end) );
+}
 
 $parser = TestParser->new( toplevel => "parse_numrange" );
 
 is_deeply( $parser->from_string( "123-456" ), [ 123, 456 ], "Number range parser complete" );
 is_deeply( $parser->{spaces}, { }, q("123-456" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 7, Maybe_Expect => 1 ] ],
-  q("123-456" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("123-456" tagged) );
+  is( $tagged->get_tag_at( 0, 'Maybe_Expect' ), 1, q("123-456" tag start) );
+  is( $tagged->get_tag_at( 6, 'Maybe_Expect' ), 1, q("123-456" tag end) );
+}
 
 {
    my $warnings = "";
@@ -141,9 +151,12 @@ is_deeply( $parser->{tags},
 
    is_deeply( $parser->from_string( "789" ), [ 789, undef ],   "Number range parser lacking max" );
   is_deeply( $parser->{spaces}, { }, q("789" spaces) );
-  is_deeply( $parser->{tags},
-    [ [ 0, 3, Maybe_Expect => 1 ] ],
-    q("789" tags) );
+  {
+    my $tagged = $parser->tagged;
+    isa_ok( $tagged, 'String::Tagged', q("789" tagged) );
+    is( $tagged->get_tag_at( 0, 'Maybe_Expect' ), 1, q("789" tag start) );
+    is( $tagged->get_tag_at( 2, 'Maybe_Expect' ), 1, q("789" tag end) );
+  }
    is( $warnings, "", "Number range lacking max yields no warnings" );
 }
 
@@ -155,6 +168,6 @@ is_deeply( $parser->from_string( "hello world" ),
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
-is_deeply( $parser->{tags}, [ ], q("hello world" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("hello world" tags) );
 
 done_testing;

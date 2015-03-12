@@ -51,17 +51,20 @@ is_deeply( $parser->{spaces},
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
   },
   q("here is a list ", "of some more ", "tokens" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 4, Expect => 1 ],
-    [ 5, 7, Expect => 1 ],
-    [ 8, 9, Expect => 1 ],
-    [ 10, 14, Expect => 1 ], # "here is a list "
-    [ 15, 17, Expect => 1 ],
-    [ 18, 22, Expect => 1 ],
-    [ 23, 27, Expect => 1 ], # "of some more "
-    [ 28, 34, Expect => 1 ], # "tokens"
-  ],
-  q("here is a list ", "of some more ", "tokens" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("here is a list..." tagged) );
+  is( $tagged->get_tag_at( 0, 'Expect' ), 1, q("here is a ..." tag 1 start) );
+  is( $tagged->get_tag_at( 3, 'Expect' ), 1, q("here is a ..." tag 1 end) );
+  is( $tagged->get_tag_at( 5, 'Expect' ), 1, q("here is a ..." tag 2 start) );
+  is( $tagged->get_tag_at( 6, 'Expect' ), 1, q("here i a ..." tag 2 end) );
+  is( $tagged->get_tag_at( 8, 'Expect' ), 1, q("here i a ..." tag 3) );
+  is( $tagged->get_tag_at( 10, 'Expect' ), 1, q("here is a ..." tag 4 start) );
+  is( $tagged->get_tag_at( 13, 'Expect' ), 1, q("here i a ..." tag 4 end) );
+  is( $tagged->get_tag_at( 15, 'Expect' ), 1, q("here is a ..." tag 5 start) );
+  is( $tagged->get_tag_at( 16, 'Expect' ), 1, q("here i a ..." tag 5 end) );
+  # ... And so on, as long as I've gotten over a boundary I'm happy.
+}
 
 $parser = TestParser_NoTag->new;
 
@@ -79,7 +82,6 @@ is_deeply( $parser->{spaces},
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
   },
   q("here is a list ", "of some more ", "tokens" spaces) );
-is_deeply( $parser->{tags}, [ ],
-  q("here is a list ", "of some more ", "tokens" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("here is a list..." tags) );
 
 done_testing;

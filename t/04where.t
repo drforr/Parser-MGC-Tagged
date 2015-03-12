@@ -87,10 +87,14 @@ $parser->from_string( "hello world" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, Expect_1 => 1 ],
-    [ 6, 11, Expect_2 => 1 ] ],
-  q("hello world" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("hello world" tagged) );
+  is( $tagged->get_tag_at( 0, 'Expect_1' ), 1, q("hello world" tag 1 start) );
+  is( $tagged->get_tag_at( 4, 'Expect_1' ), 1, q("hello world" tag 1 end) );
+  is( $tagged->get_tag_at( 6, 'Expect_2' ), 1, q("hello world" tag 2 start) );
+  is( $tagged->get_tag_at( 10, 'Expect_2' ), 1, q("hello world" tag 2 end) );
+}
 
 @positions = ( 0, 5, 11 );
 @wheres = (
@@ -101,10 +105,14 @@ $parser->from_string( "hello\nworld" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello\nworld" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 5, Expect_1 => 1 ],
-    [ 6, 11, Expect_2 => 1 ] ],
-  q("hello\nworld" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("hello world" tagged) );
+  is( $tagged->get_tag_at( 0, 'Expect_1' ), 1, q("hello\nworld" tag 1 start) );
+  is( $tagged->get_tag_at( 4, 'Expect_1' ), 1, q("hello\nworld" tag 1 end) );
+  is( $tagged->get_tag_at( 6, 'Expect_2' ), 1, q("hello\nworld" tag 2 start) );
+  is( $tagged->get_tag_at( 10, 'Expect_2' ), 1, q("hello\nworld" tag 2 end) );
+}
 
 $parser = TestParser_NoTag->new;
 
@@ -117,6 +125,6 @@ $parser->from_string( "hello world" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
-is_deeply( $parser->{tags}, [ ], q("hello world" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("hello world" tags) );
 
 done_testing;
