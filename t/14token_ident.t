@@ -31,15 +31,21 @@ my $parser = TestParser->new;
 
 is( $parser->from_string( "foo" ), "foo", 'Identifier' );
 is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, Ident => 1 ] ],
-  q("foo" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("foo" tagged) );
+  is( $tagged->get_tag_at( 0, 'Ident' ), 1, q("foo" tag start) );
+  is( $tagged->get_tag_at( 2, 'Ident' ), 1, q("foo" tag end) );
+}
 
 is( $parser->from_string( "x" ), "x", 'Single-letter identifier' );
 is_deeply( $parser->{spaces}, { }, q("x" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 1, Ident => 1 ] ],
-  q("x" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("x" tagged) );
+  is( $tagged->get_tag_at( 0, 'Ident' ), 1, q("x" tag start) );
+  is( $tagged->get_tag_at( 0, 'Ident' ), 1, q("x" tag end) );
+}
 
 ok( !eval { $parser->from_string( "123" ) }, '"123" fails' );
 is( $@,
@@ -61,11 +67,17 @@ is_deeply( $parser->{spaces}, { }, q("some-ident" spaces) );
 is_deeply( $parser->{tags},
   [ [ 0, 10, Ident => 1 ] ],
   q("some-ident" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("some-ident" tagged) );
+  is( $tagged->get_tag_at( 0, 'Ident' ), 1, q("some-ident" tag start) );
+  is( $tagged->get_tag_at( 9, 'Ident' ), 1, q("some-ident" tag end) );
+}
 
 $parser = TestParser_NoTag->new;
 
 is( $parser->from_string( "foo" ), "foo", 'Identifier' );
 is_deeply( $parser->{spaces}, { }, q("foo" spaces) );
-is_deeply( $parser->{tags}, [ ], q("foo" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("foo" tags) );
 
 done_testing;

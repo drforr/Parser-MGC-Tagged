@@ -55,10 +55,14 @@ my $parser = TestParser->new;
  
 is_deeply( $parser->from_string( "123" ), [ 123 ], '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, Int => 1 ],
-    [ 0, 3, Sequence_Of => 1 ] ],
-  q("123" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("123" tagged) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("123" tag start) );
+  is( $tagged->get_tag_at( 2, 'Int' ), 1, q("123" tag end) );
+  is( $tagged->get_tag_at( 0, 'Sequence_Of' ), 1, q("123" tag start) );
+  is( $tagged->get_tag_at( 2, 'Sequence_Of' ), 1, q("123" tag end) );
+}
 
 is_deeply( $parser->from_string( "4 5 6" ), [ 4, 5, 6 ], '"4 5 6"' );
 is_deeply( $parser->{spaces},
