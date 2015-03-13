@@ -68,26 +68,38 @@ my $parser = TestParser->new;
 
 is_deeply( $parser->from_string( "123" ), [ int => 123 ], '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, Int => 1 ],
-    [ 0, 3, Any_Of => 1 ] ],
-  q("123" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("123" tagged) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("123" tag start) );
+  is( $tagged->get_tag_at( 2, 'Int' ), 1, q("123" tag end) );
+  is( $tagged->get_tag_at( 0, 'Any_Of' ), 1, q("123" tag start) );
+  is( $tagged->get_tag_at( 2, 'Any_Of' ), 1, q("123" tag end) );
+}
 
 is_deeply( $parser->from_string( q["hi"] ), [ str => "hi" ], '"hi"' );
 is_deeply( $parser->{spaces}, { }, q(q["hi"] spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 4, String => 1 ],
-    [ 0, 4, Any_Of => 1 ] ],
-  q(q["hi"] tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q(q["hi"] tagged) );
+  is( $tagged->get_tag_at( 0, 'String' ), 1, q(q["hi"] tag start) );
+  is( $tagged->get_tag_at( 3, 'String' ), 1, q(q["hi"] tag end) );
+  is( $tagged->get_tag_at( 0, 'Any_Of' ), 1, q(q["hi"] tag start) );
+  is( $tagged->get_tag_at( 3, 'Any_Of' ), 1, q(q["hi"] tag end) );
+}
 
 is_deeply( $parser->from_string( "foobar" ),
   [ ident => "foobar" ],
   '"foobar"' );
 is_deeply( $parser->{spaces}, { }, q("foobar" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 6, Ident => 1 ],
-    [ 0, 6, Any_Of => 1 ] ],
-  q("foobar" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("foobar" tagged) );
+  is( $tagged->get_tag_at( 0, 'Ident' ), 1, q("foobar" tag start) );
+  is( $tagged->get_tag_at( 5, 'Ident' ), 1, q("foobar" tag end) );
+  is( $tagged->get_tag_at( 0, 'Any_Of' ), 1, q("foobar" tag start) );
+  is( $tagged->get_tag_at( 5, 'Any_Of' ), 1, q("foobar" tag end) );
+}
 
 ok( !eval { $parser->from_string( "@" ) }, '"@" fails' );
 is( $@, "Here I fail\n", 'Exception from "@" failure' );
@@ -100,17 +112,24 @@ is_deeply( $parser->from_string( "123 456" ),
   [ [ int => 123 ], [ int => 456 ] ],
   '"123"' );
 is_deeply( $parser->{spaces}, { 3 => 4 }, q("123 456" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 3, Int => 1 ],
-    [ 0, 3, Any_Of => 1 ],
-    [ 4, 7, Int => 1 ],
-    [ 4, 7, Any_Of => 1 ] ],
-  q("123 456" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("123 456" tagged) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("123 456" tag start) );
+  is( $tagged->get_tag_at( 2, 'Int' ), 1, q("123 456" tag end) );
+  is( $tagged->get_tag_at( 0, 'Any_Of' ), 1, q("123 456" tag start) );
+  is( $tagged->get_tag_at( 2, 'Any_Of' ), 1, q("123 456" tag end) );
+  is( $tagged->get_tag_at( 4, 'Int' ), 1, q("123 456" tag start) );
+  is( $tagged->get_tag_at( 6, 'Int' ), 1, q("123 456" tag end) );
+  is( $tagged->get_tag_at( 4, 'Any_Of' ), 1, q("123 456" tag start) );
+  is( $tagged->get_tag_at( 6, 'Any_Of' ), 1, q("123 456" tag end) );
+}
 
 $parser = TestParser_NoTag->new;
 
 is_deeply( $parser->from_string( "123" ), [ int => 123 ], '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
 is_deeply( $parser->{tags}, [ ], q("123" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("123" tags) );
 
 done_testing;

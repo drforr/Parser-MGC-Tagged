@@ -68,16 +68,22 @@ is_deeply( $parser->from_string( "4 5 6" ), [ 4, 5, 6 ], '"4 5 6"' );
 is_deeply( $parser->{spaces},
   { 1 => 2, 3 => 4 },
   q("4 5 6" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 1, Int => 1 ],
-    [ 2, 3, Int => 1 ],
-    [ 4, 5, Int => 1 ],
-    [ 0, 5, Sequence_Of => 1 ] ],
-  q("4 5 6" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("4 5 6" tagged) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("4 5 6" tag start) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("4 5 6" tag end) );
+  is( $tagged->get_tag_at( 2, 'Int' ), 1, q("4 5 6" tag start) );
+  is( $tagged->get_tag_at( 2, 'Int' ), 1, q("4 5 6" tag end) );
+  is( $tagged->get_tag_at( 4, 'Int' ), 1, q("4 5 6" tag start) );
+  is( $tagged->get_tag_at( 4, 'Int' ), 1, q("4 5 6" tag end) );
+  is( $tagged->get_tag_at( 0, 'Sequence_Of' ), 1, q("4 5 6" tag start) );
+  is( $tagged->get_tag_at( 4, 'Sequence_Of' ), 1, q("4 5 6" tag end) );
+}
 
 is_deeply( $parser->from_string( "" ), [], '""' );
 is_deeply( $parser->{spaces}, { }, q("" spaces) );
-is_deeply( $parser->{tags}, [ ], q("" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("" tags) );
 
 $parser = IntThenStringParser->new;
 
@@ -86,25 +92,42 @@ is_deeply( $parser->from_string( "10 20 'ab' 'cd'" ),
 is_deeply( $parser->{spaces},
   { 2 => 3, 5 => 6, 10 => 11 },
   q("10 20 'ab' 'cd'" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 2, Int => 1 ],
-    [ 3, 5, Int => 1 ],
-    [ 0, 5, Sequence_Of => 1 ],
-    [ 6, 10, String => 1 ],
-    [ 11, 15, String => 1 ],
-    [ 6, 15, Sequence_Of => 1 ] ],
-  q("10 20 'ab' 'cd'" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("10 20 'ab' 'cd'" tagged) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("10 20 'ab' 'cd'" tag start) );
+  is( $tagged->get_tag_at( 1, 'Int' ), 1, q("10 20 'ab' 'cd'" tag end) );
+  is( $tagged->get_tag_at( 3, 'Int' ), 1, q("10 20 'ab' 'cd'" tag start) );
+  is( $tagged->get_tag_at( 4, 'Int' ), 1, q("10 20 'ab' 'cd'" tag end) );
+  is( $tagged->get_tag_at( 0, 'Sequence_Of' ), 1,
+      q("10 20 'ab' 'cd'" tag start) );
+  is( $tagged->get_tag_at( 4, 'Sequence_Of' ), 1,
+      q("10 20 'ab' 'cd'" tag end) );
+  is( $tagged->get_tag_at( 6, 'String' ), 1, q("10 20 'ab' 'cd'" tag start) );
+  is( $tagged->get_tag_at( 9, 'String' ), 1, q("10 20 'ab' 'cd'" tag end) );
+  is( $tagged->get_tag_at( 11, 'String' ), 1, q("10 20 'ab' 'cd'" tag start) );
+  is( $tagged->get_tag_at( 14, 'String' ), 1, q("10 20 'ab' 'cd'" tag end) );
+  is( $tagged->get_tag_at( 6, 'Sequence_Of' ), 1,
+      q("10 20 'ab' 'cd'" tag start) );
+  is( $tagged->get_tag_at( 14, 'Sequence_Of' ), 1,
+      q("10 20 'ab' 'cd'" tag end) );
+}
 
 is_deeply( $parser->from_string( "10 20" ),
            [ [ 10, 20 ], [] ], q("10 20") );
 is_deeply( $parser->{spaces},
   { 2 => 3 },
   q("10 20" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 2, Int => 1 ],
-    [ 3, 5, Int => 1 ],
-    [ 0, 5, Sequence_Of => 1 ] ],
-  q("10 20" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("10 20" tagged) );
+  is( $tagged->get_tag_at( 0, 'Int' ), 1, q("10 20" tag start) );
+  is( $tagged->get_tag_at( 1, 'Int' ), 1, q("10 20" tag start) );
+  is( $tagged->get_tag_at( 3, 'Int' ), 1, q("10 20" tag start) );
+  is( $tagged->get_tag_at( 4, 'Int' ), 1, q("10 20" tag end) );
+  is( $tagged->get_tag_at( 0, 'Sequence_Of' ), 1, q("10 20" tag end) );
+  is( $tagged->get_tag_at( 4, 'Sequence_Of' ), 1, q("10 20" tag end) );
+}
 
 is_deeply( $parser->from_string( "'ab' 'cd'" ),
            [ [], [ 'ab', 'cd' ] ], q("'ab' 'cd'") );
@@ -116,11 +139,21 @@ is_deeply( $parser->{tags},
     [ 5, 9, String => 1 ],
     [ 0, 9, Sequence_Of => 1 ] ],
   q("'ab' 'cd'" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("10 20" tagged) );
+  is( $tagged->get_tag_at( 0, 'String' ), 1, q("10 20" tag start) );
+  is( $tagged->get_tag_at( 3, 'String' ), 1, q("10 20" tag start) );
+  is( $tagged->get_tag_at( 5, 'String' ), 1, q("10 20" tag start) );
+  is( $tagged->get_tag_at( 8, 'String' ), 1, q("10 20" tag end) );
+  is( $tagged->get_tag_at( 0, 'Sequence_Of' ), 1, q("10 20" tag end) );
+  is( $tagged->get_tag_at( 8, 'Sequence_Of' ), 1, q("10 20" tag end) );
+}
 
 $parser = TestParser_NoTag->new;
  
 is_deeply( $parser->from_string( "123" ), [ 123 ], '"123"' );
 is_deeply( $parser->{spaces}, { }, q("123" spaces) );
-is_deeply( $parser->{tags}, [ ], q("123" tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("123" tags) );
 
 done_testing;
