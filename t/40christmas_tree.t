@@ -64,7 +64,9 @@ sub parse {
 
     # '5'
     # Alternation with no fallthrough
-    $self->any_of( sub { $self->token_int ( Int_9 => 1 ) }, [ Any_Of_10 => 1 ] ),
+    $self->any_of( sub { $self->token_int ( Int_9 => 1 ) },
+      [ Any_Of_10 => 1 ]
+    ),
 
     # 'fail'
     # Alternation with fallthrough ('fail' does not match token_int())
