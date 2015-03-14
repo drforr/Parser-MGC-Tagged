@@ -10,34 +10,34 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse_hello
 {
-   my $self = shift;
+  my $self = shift;
 
-   [ $self->expect( "hello", [ Expect_1 => 1 ] ),
-     $self->expect( qr/world/, [ Expect_2 => 1 ] )
-   ];
+  [ $self->expect( "hello", [ Expect_1 => 1 ] ),
+    $self->expect( qr/world/, [ Expect_2 => 1 ] )
+  ];
 }
 
 sub parse_hex
 {
-   my $self = shift;
+  my $self = shift;
 
-   return hex +( $self->expect( qr/0x([0-9A-F]+)/i, [ Expect => 1 ] ) )[1];
+  return hex +( $self->expect( qr/0x([0-9A-F]+)/i, [ Expect => 1 ] ) )[1];
 }
 
 sub parse_foo_or_bar
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->maybe_expect( qr/foo/i, [ Maybe_Expect_1 => 1 ] ) ||
-          $self->maybe_expect( qr/bar/i, [ Maybe_Expect_2 => 1 ] );
+  return $self->maybe_expect( qr/foo/i, [ Maybe_Expect_1 => 1 ] ) ||
+         $self->maybe_expect( qr/bar/i, [ Maybe_Expect_2 => 1 ] );
 }
 
 sub parse_numrange
 {
-   my $self = shift;
+  my $self = shift;
 
-   return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/,
-                                   [ Maybe_Expect => 1 ] ) )[1,2] ];
+  return [ ( $self->maybe_expect( qr/(\d+)(?:-(\d+))?/,
+                                  [ Maybe_Expect => 1 ] ) )[1,2] ];
 }
 
 package TestParser_NoTag;
@@ -45,11 +45,11 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse_hello
 {
-   my $self = shift;
+  my $self = shift;
 
-   [ $self->expect( "hello" ),
-     $self->expect( qr/world/ )
-   ];
+  [ $self->expect( "hello" ),
+    $self->expect( qr/world/ )
+  ];
 }
 
 package main;
@@ -57,8 +57,8 @@ package main;
 my $parser = TestParser->new( toplevel => "parse_hello" );
 
 is_deeply( $parser->from_string( "hello world" ),
-   [ "hello", "world" ],
-   '"hello world"' );
+  [ "hello", "world" ],
+  '"hello world"' );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );
@@ -72,8 +72,8 @@ is_deeply( $parser->{spaces},
 }
 
 is_deeply( $parser->from_string( "  hello world  " ),
-   [ "hello", "world" ],
-   '"  hello world  "' );
+  [ "hello", "world" ],
+  '"  hello world  "' );
 is_deeply( $parser->{spaces},
   { 0 => 2,
     7 => 8,
@@ -98,10 +98,10 @@ my $modifiers = (qr/foobar/ =~ /\Q(?^/) ? '^' : '-xism';
 
 ok( !eval { $parser->from_string( "goodbye world" ) }, '"goodbye world" fails' );
 is( $@,
-   qq[Expected (?$modifiers:hello) on line 1 at:\n] . 
-   qq[goodbye world\n] . 
-   qq[^\n],
-   'Exception from "goodbye world" failure' );
+  qq[Expected (?$modifiers:hello) on line 1 at:\n] . 
+  qq[goodbye world\n] . 
+  qq[^\n],
+  'Exception from "goodbye world" failure' );
 
 $parser = TestParser->new( toplevel => "parse_hex" );
 
@@ -146,10 +146,10 @@ is_deeply( $parser->{spaces}, { }, q("123-456" spaces) );
 }
 
 {
-   my $warnings = "";
-   local $SIG{__WARN__} = sub { $warnings .= join "", @_ };
+  my $warnings = "";
+  local $SIG{__WARN__} = sub { $warnings .= join "", @_ };
 
-   is_deeply( $parser->from_string( "789" ), [ 789, undef ],   "Number range parser lacking max" );
+  is_deeply( $parser->from_string( "789" ), [ 789, undef ],   "Number range parser lacking max" );
   is_deeply( $parser->{spaces}, { }, q("789" spaces) );
   {
     my $tagged = $parser->tagged;
@@ -163,8 +163,8 @@ is_deeply( $parser->{spaces}, { }, q("123-456" spaces) );
 $parser = TestParser_NoTag->new( toplevel => "parse_hello" );
 
 is_deeply( $parser->from_string( "hello world" ),
-   [ "hello", "world" ],
-   '"hello world"' );
+  [ "hello", "world" ],
+  '"hello world"' );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
   q("hello world" spaces) );

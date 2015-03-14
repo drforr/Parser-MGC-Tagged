@@ -10,12 +10,12 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->sequence_of( sub {
-      return $self->token_int( Int => 1 );
-   },
-   [ Sequence_Of => 1 ] );
+  $self->sequence_of( sub {
+     return $self->token_int( Int => 1 );
+  },
+  [ Sequence_Of => 1 ] );
 }
 
 package TestParser_NoTag;
@@ -23,11 +23,11 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->sequence_of( sub {
-      return $self->token_int
-   } );
+  $self->sequence_of( sub {
+    return $self->token_int
+  } );
 }
 
 package IntThenStringParser;
@@ -35,18 +35,16 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   [ $self->sequence_of( sub {
-         return $self->token_int( Int => 1 );
-      },
+  [ $self->sequence_of( sub {
+      return $self->token_int( Int => 1 ) },
       [ Sequence_Of => 1 ] ),
 
-      $self->sequence_of( sub {
-         return $self->token_string( String => 1 );
-      },
+    $self->sequence_of( sub {
+      return $self->token_string( String => 1 ) },
       [ Sequence_Of => 1 ] ),
-   ];
+  ];
 }
 
 package main;

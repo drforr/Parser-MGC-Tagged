@@ -10,15 +10,15 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->any_of(
-      sub { [ int => $self->token_int( Int => 1 ) ] },
-      sub { [ str => $self->token_string( String => 1 ) ] },
-      sub { [ ident => $self->token_ident( Ident => 1 ) ] },
-      sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
-     [ Any_Of => 1 ]
-   );
+  $self->any_of(
+    sub { [ int => $self->token_int( Int => 1 ) ] },
+    sub { [ str => $self->token_string( String => 1 ) ] },
+    sub { [ ident => $self->token_ident( Ident => 1 ) ] },
+    sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
+    [ Any_Of => 1 ]
+  );
 }
 
 package TestParser_NoTag;
@@ -26,14 +26,14 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->any_of(
-      sub { [ int => $self->token_int ] },
-      sub { [ str => $self->token_string ] },
-      sub { [ ident => $self->token_ident ] },
-      sub { $self->expect( "@" ); die "Here I fail\n" }
-   );
+  $self->any_of(
+    sub { [ int => $self->token_int ] },
+    sub { [ str => $self->token_string ] },
+    sub { [ ident => $self->token_ident ] },
+    sub { $self->expect( "@" ); die "Here I fail\n" }
+  );
 }
 
 package TestParser2;
@@ -45,21 +45,20 @@ sub parse
 
    return [
      $self->any_of(
-        sub { [ int => $self->token_int( Int => 1 ) ] },
-        sub { [ str => $self->token_string( String => 1 ) ] },
-        sub { [ ident => $self->token_ident( Ident => 1 ) ] },
-        sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
+       sub { [ int => $self->token_int( Int => 1 ) ] },
+       sub { [ str => $self->token_string( String => 1 ) ] },
+       sub { [ ident => $self->token_ident( Ident => 1 ) ] },
+       sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
        [ Any_Of => 1 ]
      ),
      $self->any_of(
-        sub { [ int => $self->token_int( Int => 1 ) ] },
-        sub { [ str => $self->token_string( String => 1 ) ] },
-        sub { [ ident => $self->token_ident( Ident => 1 ) ] },
-        sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
+       sub { [ int => $self->token_int( Int => 1 ) ] },
+       sub { [ str => $self->token_string( String => 1 ) ] },
+       sub { [ ident => $self->token_ident( Ident => 1 ) ] },
+       sub { $self->expect( "@", [ Expect => 1 ] ); die "Here I fail\n" },
        [ Any_Of => 1 ]
      ),
   ];
-    
 }
 
 package main;

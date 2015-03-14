@@ -10,21 +10,21 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->any_of(
-      sub { $self->token_int( Int => 1 ) },
-      sub {
-         $self->scope_of( "(",
-            sub {
-               $self->commit;
-               $self->token_string( String => 1 );
-            },
-            ")",
-           [ Scope_Of => 1 ] );
-      },
-      [ Any_Of => 1 ]
-   );
+  $self->any_of(
+    sub { $self->token_int( Int => 1 ) },
+    sub {
+      $self->scope_of( "(",
+        sub {
+          $self->commit;
+          $self->token_string( String => 1 );
+        },
+        ")",
+       [ Scope_Of => 1 ] );
+    },
+    [ Any_Of => 1 ]
+  );
 }
 
 package TestParser_NoTag;
@@ -32,19 +32,19 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->any_of(
-      sub { $self->token_int },
-      sub {
-         $self->scope_of( "(",
-            sub {
-               $self->commit;
-               $self->token_string;
-            },
-            ")" );
-      }
-   );
+  $self->any_of(
+    sub { $self->token_int },
+    sub {
+      $self->scope_of( "(",
+        sub {
+           $self->commit;
+           $self->token_string;
+        },
+        ")" );
+    }
+  );
 }
 
 package IntStringPairsParser;
@@ -52,17 +52,17 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->sequence_of( sub {
+  $self->sequence_of( sub {
       my $int = $self->token_int( Int => 1 );
       $self->commit;
 
       my $str = $self->token_string( String => 1 );
 
       [ $int, $str ];
-   },
-  [ Sequence_Of => 1 ] );
+    },
+    [ Sequence_Of => 1 ] );
 }
 
 package main;

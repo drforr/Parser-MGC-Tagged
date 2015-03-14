@@ -12,13 +12,13 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->maybe( sub {
-      die $die if $die;
-      $self->token_ident( Ident => 1 );
-   } ) ||
-      $self->token_int( Int => 1 );
+  $self->maybe( sub {
+    die $die if $die;
+    $self->token_ident( Ident => 1 );
+  } ) ||
+    $self->token_int( Int => 1 );
 }
 
 package TestParser_NoTag;
@@ -26,13 +26,13 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->maybe( sub {
-      die $die if $die;
-      $self->token_ident;
-   } ) ||
-      $self->token_int;
+  $self->maybe( sub {
+    die $die if $die;
+    $self->token_ident;
+  } ) ||
+    $self->token_int;
 }
 
 package main;

@@ -14,9 +14,9 @@ sub elem  { bless [ @_ ], "XmlParser::Node::Element" }
 
 sub test
 {
-   my ( $str, $expect, $name ) = @_;
+  my ( $str, $expect, $name ) = @_;
 
-   is_deeply( $parser->from_string( $str ), $expect, $name );
+  is_deeply( $parser->from_string( $str ), $expect, $name );
 }
 
 test q[<xml>Hello world</xml>],

@@ -10,18 +10,19 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->sequence_of( 
-      sub {
-         $self->any_of(
-            sub { $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) . "/" . $self->scope_level },
-            sub { $self->scope_of( "(", \&parse, ")", [ Scope_Of => 1 ] ) },
-           [ Any_Of => 1 ]
-         );
-      },
-     [ Sequence_Of => 1 ]
-   );
+  $self->sequence_of( 
+    sub {
+      $self->any_of(
+        sub { $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) .
+                             "/" . $self->scope_level },
+        sub { $self->scope_of( "(", \&parse, ")", [ Scope_Of => 1 ] ) },
+        [ Any_Of => 1 ]
+      );
+    },
+    [ Sequence_Of => 1 ]
+  );
 }
 
 package TestParser_NoTag;
@@ -29,16 +30,16 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->sequence_of( 
-      sub {
-         $self->any_of(
-            sub { $self->expect( qr/[a-z]+/ ) . "/" . $self->scope_level },
-            sub { $self->scope_of( "(", \&parse, ")" ) }
-         );
-      }
-   );
+  $self->sequence_of( 
+    sub {
+      $self->any_of(
+        sub { $self->expect( qr/[a-z]+/ ) . "/" . $self->scope_level },
+        sub { $self->scope_of( "(", \&parse, ")" ) }
+      );
+    }
+  );
 }
 
 package main;

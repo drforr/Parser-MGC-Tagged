@@ -13,10 +13,10 @@ my $convert;
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->generic_token(
-     token => $re, $convert, [ Generic_Token => 1 ] );
+  return $self->generic_token(
+    token => $re, $convert, [ Generic_Token => 1 ] );
 }
 
 package TestParser_NoTag;
@@ -27,9 +27,9 @@ my $convert_NoTag;
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->generic_token( token => $re_NoTag, $convert_NoTag );
+  return $self->generic_token( token => $re_NoTag, $convert_NoTag );
 }
 
 package main;

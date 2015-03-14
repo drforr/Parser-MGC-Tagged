@@ -11,9 +11,9 @@ my $parser = LispParser->new;
 
 sub test
 {
-   my ( $str, $expect ) = @_;
+  my ( $str, $expect ) = @_;
 
-   is_deeply( $parser->from_string( $str ), [ $expect ], qq("$str") );
+  is_deeply( $parser->from_string( $str ), [ $expect ], qq("$str") );
 }
 
 test "123", 123;

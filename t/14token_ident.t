@@ -10,9 +10,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_ident( Ident => 1 );
+  return $self->token_ident( Ident => 1 );
 }
 
 package TestParser_NoTag;
@@ -20,9 +20,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_ident;
+  return $self->token_ident;
 }
 
 package main;
@@ -54,7 +54,8 @@ is( $@,
    qq[^\n],
    'Exception from "123" failure' );
 
-ok( !eval { $parser->from_string( "some-ident" ) }, '"some-ident" fails on default identifier' );
+ok( !eval { $parser->from_string( "some-ident" ) },
+   '"some-ident" fails on default identifier' );
 
 $parser = TestParser->new(
    patterns => { ident => qr/[[:alpha:]_][\w-]+/ },

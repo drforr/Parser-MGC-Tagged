@@ -10,12 +10,12 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->expect( "hello", [ Expect_1 => 1 ] );
-   $self->expect( qr/world/, [ Expect_2 => 1 ] );
+  $self->expect( "hello", [ Expect_1 => 1 ] );
+  $self->expect( qr/world/, [ Expect_2 => 1 ] );
 
-   return 1;
+  return 1;
 }
 
 package TestParser_NoTag;
@@ -23,12 +23,12 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->expect( "hello" );
-   $self->expect( qr/world/ );
+  $self->expect( "hello" );
+  $self->expect( qr/world/ );
 
-   return 1;
+  return 1;
 }
 
 package main;
@@ -64,9 +64,7 @@ is_deeply( $parser->{spaces},
 ok( !eval { $parser->from_string( "hello\n# Comment\nworld" ) },
     '"hello world" with comment fails' );
 
-$parser = TestParser->new(
-   patterns => { comment => qr/#.*\n/ },
-);
+$parser = TestParser->new( patterns => { comment => qr/#.*\n/ } );
 
 ok( $parser->from_string( "hello\n# Comment\nworld" ),
     '"hello world" with comment passes' );

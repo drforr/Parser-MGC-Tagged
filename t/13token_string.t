@@ -10,9 +10,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_string( String => 1 );
+  return $self->token_string( String => 1 );
 }
 
 package TestParser_NoTag;
@@ -20,9 +20,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_string;
+  return $self->token_string;
 }
 
 package StringPairParser;
@@ -30,10 +30,10 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return [ $self->token_string( String_1 => 1 ),
-            $self->token_string( String_2 => 1 ) ];
+  return [ $self->token_string( String_1 => 1 ),
+           $self->token_string( String_2 => 1 ) ];
 }
 
 package main;
@@ -200,9 +200,7 @@ is_deeply( $parser->{spaces}, { }, q(q["unihex \x{263a}] spaces) );
       q(q["unihex \x{263a}"] tag end) );
 }
 
-$parser = TestParser->new(
-   patterns => { string_delim => qr/"/ }
-);
+$parser = TestParser->new( patterns => { string_delim => qr/"/ } );
 
 is( $parser->from_string( q["double"] ), "double", 'Double quoted string still passes' );
 is_deeply( $parser->{spaces}, { }, q(q["double"] spaces) );

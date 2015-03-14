@@ -10,12 +10,12 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->one_of(
-      sub { [ int => $self->token_int( Int => 1 ) ] },
-      sub { [ str => $self->token_string( String => 1 ) ] },
-   );
+  $self->one_of(
+    sub { [ int => $self->token_int( Int => 1 ) ] },
+    sub { [ str => $self->token_string( String => 1 ) ] },
+  );
 }
 
 package main;

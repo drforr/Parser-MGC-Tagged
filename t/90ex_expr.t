@@ -10,10 +10,10 @@ require "examples/eval-expr.pl";
 my $parser = ExprParser->new;
 
 while( <DATA> ) {
-   chomp;
-   my ( $str, $expect ) = split m/=/;
+  chomp;
+  my ( $str, $expect ) = split m/=/;
 
-   is( $parser->from_string( $str ), $expect, $str );
+  is( $parser->from_string( $str ), $expect, $str );
 }
 
 done_testing;

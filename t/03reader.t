@@ -10,13 +10,13 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   my @tokens;
-   push @tokens,
-     $self->expect( qr/[a-z]+/, [ Expect => 1 ] ) while !$self->at_eos;
+  my @tokens;
+  push @tokens, $self->expect( qr/[a-z]+/, [ Expect => 1 ] )
+    while !$self->at_eos;
 
-   return \@tokens;
+  return \@tokens;
 }
 
 package TestParser_NoTag;
@@ -24,13 +24,13 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   my @tokens;
-   push @tokens,
-     $self->expect( qr/[a-z]+/ ) while !$self->at_eos;
+  my @tokens;
+  push @tokens, $self->expect( qr/[a-z]+/ )
+    while !$self->at_eos;
 
-   return \@tokens;
+  return \@tokens;
 }
 
 package main;
@@ -38,14 +38,14 @@ package main;
 my $parser = TestParser->new;
 
 my @strings = (
-   "here is a list ",
-   "of some more ",
-   "tokens"
+  "here is a list ",
+  "of some more ",
+  "tokens"
 );
 
 is_deeply( $parser->from_reader( sub { return shift @strings } ),
-   [qw( here is a list of some more tokens )],
-   'tokens from reader' );
+  [qw( here is a list of some more tokens )],
+  'tokens from reader' );
 is_deeply( $parser->{spaces},
   { 4 => 5, 7 => 8, 9 => 10, # "here is a list "
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
@@ -69,19 +69,20 @@ is_deeply( $parser->{spaces},
 $parser = TestParser_NoTag->new;
 
 @strings = (
-   "here is a list ",
-   "of some more ",
-   "tokens"
+  "here is a list ",
+  "of some more ",
+  "tokens"
 );
 
 is_deeply( $parser->from_reader( sub { return shift @strings } ),
-   [qw( here is a list of some more tokens )],
-   'tokens from reader' );
+  [qw( here is a list of some more tokens )],
+  'tokens from reader' );
 is_deeply( $parser->{spaces},
   { 4 => 5, 7 => 8, 9 => 10, # "here is a list "
     14 => 15, 17 => 18, 22 => 23, 27 => 28 # "of some more "
   },
   q("here is a list ", "of some more ", "tokens" spaces) );
-is_deeply( $parser->tagged->get_tags_at( 0 ), { }, q("here is a list..." tags) );
+is_deeply( $parser->tagged->get_tags_at( 0 ), { },
+  q("here is a list..." tags) );
 
 done_testing;

@@ -11,9 +11,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_int( Int => 1 );
+  return $self->token_int( Int => 1 );
 }
 
 package main;

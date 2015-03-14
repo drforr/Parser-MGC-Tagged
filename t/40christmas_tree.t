@@ -97,15 +97,15 @@ sub parse {
     # '8'
     # scope_of() calls expect() internally, so call it inside.
     $self->scope_of(
-        '(',
-        sub { $self->expect( '8', [ Expect_19 => 1 ] ) },
-        ')',
+      '(',
+      sub { $self->expect( '8', [ Expect_19 => 1 ] ) },
+      ')',
       [ Scope_Of_20 => 1 ]
     ),
 
     # '9', '10'
     $self->sequence_of(
-       sub { $self->token_int ( Int_21 => 1 ) },
+      sub { $self->token_int ( Int_21 => 1 ) },
       [ Sequence_Of_22 => 1 ]
     ),
 
@@ -151,17 +151,19 @@ is_deeply(
 );
 
 is_deeply( $parser->{spaces},
-  { 1 => 2, 5 => 6, 9 => 10, 13 => 14, 22 => 23, 28 => 29, 36 => 37, 44 => 45, 46 => 47, 53 => 54, 62 => 63, 65 => 66, 67 => 68, 69 => 70, 71 => 72, 73 => 74, 75 => 76, 78 => 79, 80 => 81, 82 => 83  },
+  { 1 => 2, 5 => 6, 9 => 10, 13 => 14, 22 => 23, 28 => 29, 36 => 37, 44 => 45,
+    46 => 47, 53 => 54, 62 => 63, 65 => 66, 67 => 68, 69 => 70, 71 => 72,
+    73 => 74, 75 => 76, 78 => 79, 80 => 81, 82 => 83  },
   q("$parse_me" spaces) );
 {
   my $tagged = $parser->tagged;
   isa_ok( $tagged, 'String::Tagged', q("foo" tagged) );
-  is( $tagged->get_tag_at(  0, 'Int_1' ), 1, q(Christmas tree start) );
-  is( $tagged->get_tag_at(  0, 'Int_1' ), 1, q(Christmas tree end) );
-  is( $tagged->get_tag_at(  2, 'Float_2' ), 1, q(Christmas tree start) );
-  is( $tagged->get_tag_at(  4, 'Float_2' ), 1, q(Christmas tree end) );
-  is( $tagged->get_tag_at(  6, 'Float_3' ), 1, q(Christmas tree start) );
-  is( $tagged->get_tag_at(  8, 'Float_3' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 0, 'Int_1' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 0, 'Int_1' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 2, 'Float_2' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 4, 'Float_2' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 6, 'Float_3' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 8, 'Float_3' ), 1, q(Christmas tree end) );
   is( $tagged->get_tag_at( 10, 'Number_4' ), 1, q(Christmas tree start) );
   is( $tagged->get_tag_at( 12, 'Number_4' ), 1, q(Christmas tree end) );
   is( $tagged->get_tag_at( 14, 'String_5' ), 1, q(Christmas tree start) );

@@ -10,14 +10,14 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->scope_of(
-      "(",
-      sub { return $self->token_int( Int => 1 ) },
-      ")",
-     [ Scope_Of => 1 ]
-   );
+  $self->scope_of(
+    "(",
+    sub { return $self->token_int( Int => 1 ) },
+    ")",
+    [ Scope_Of => 1 ]
+  );
 }
 
 package TestParser_NoTag;
@@ -25,13 +25,13 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->scope_of(
-      "(",
-      sub { return $self->token_int },
-      ")"
-   );
+  $self->scope_of(
+    "(",
+    sub { return $self->token_int },
+    ")"
+  );
 }
 
 package TestParser2;
@@ -39,22 +39,22 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return [
-     $self->scope_of(
-        "(",
-        sub { return $self->token_int( Int => 1 ) },
-        ")",
-       [ Scope_Of => 1 ]
-     ),
-     $self->scope_of(
-        "(",
-        sub { return $self->token_int( Int => 1 ) },
-        ")",
-       [ Scope_Of => 1 ]
-     ),
-   ];
+  return [
+    $self->scope_of(
+      "(",
+      sub { return $self->token_int( Int => 1 ) },
+      ")",
+      [ Scope_Of => 1 ]
+    ),
+    $self->scope_of(
+      "(",
+      sub { return $self->token_int( Int => 1 ) },
+      ")",
+      [ Scope_Of => 1 ]
+    ),
+  ];
 }
 
 package DynamicDelimParser;
@@ -62,17 +62,17 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   my $delim = $self->expect( qr/[\(\[]/, [ Expect => 1 ] );
-   $delim =~ tr/([/)]/;
+  my $delim = $self->expect( qr/[\(\[]/, [ Expect => 1 ] );
+  $delim =~ tr/([/)]/;
 
-   $self->scope_of(
-      undef,
-      sub { return $self->token_int( Int => 1 ) },
-      $delim,
-     [ Scope_Of => 1 ]
-   );
+  $self->scope_of(
+    undef,
+    sub { return $self->token_int( Int => 1 ) },
+    $delim,
+    [ Scope_Of => 1 ]
+  );
 }
 
 package main;

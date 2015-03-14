@@ -10,9 +10,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_kw( qw( foo bar ), [ Kw => 1 ] );
+  return $self->token_kw( qw( foo bar ), [ Kw => 1 ] );
 }
 
 package TestParser_NoTag;
@@ -20,9 +20,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_kw( qw( foo bar ) );
+  return $self->token_kw( qw( foo bar ) );
 }
 
 package TestParser2;
@@ -30,10 +30,10 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return [ $self->token_kw( qw( foo bar ), [ Kw_1 => 1 ] ),
-            $self->token_kw( qw( foo bar ), [ Kw_2 => 1 ] ) ];
+  return [ $self->token_kw( qw( foo bar ), [ Kw_1 => 1 ] ),
+           $self->token_kw( qw( foo bar ), [ Kw_2 => 1 ] ) ];
 }
 
 package main;
@@ -58,7 +58,8 @@ is( $@,
 
 $parser = TestParser2->new;
 
-is_deeply( $parser->from_string( "foo bar" ), [ "foo", "bar" ], 'Keyword with spaces' );
+is_deeply( $parser->from_string( "foo bar" ),
+           [ "foo", "bar" ], 'Keyword with spaces' );
 is_deeply( $parser->{spaces}, { 3 => 4 }, q("foo bar" spaces) );
 {
   my $tagged = $parser->tagged;

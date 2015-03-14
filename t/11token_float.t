@@ -10,9 +10,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_float( Float => 1 );
+  return $self->token_float( Float => 1 );
 }
 
 package TestParser_NoTag;
@@ -20,9 +20,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return $self->token_float;
+  return $self->token_float;
 }
 
 package main;
@@ -32,9 +32,9 @@ my $parser = TestParser->new;
 # We're going to be testing floating point values.
 sub approx
 {
-   my ( $got, $exp, $name ) = @_;
+  my ( $got, $exp, $name ) = @_;
 
-   ok( abs( $got - $exp ) < 1E-12, $name ) or
+  ok( abs( $got - $exp ) < 1E-12, $name ) or
       diag( "Expected approximately $exp, got $got" );
 }
 

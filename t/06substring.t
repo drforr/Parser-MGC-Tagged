@@ -10,9 +10,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   [ $self->substring_before( "!" ), $self->expect( "!", [ Expect => 1 ] ) ];
+  [ $self->substring_before( "!" ), $self->expect( "!", [ Expect => 1 ] ) ];
 }
 
 package TestParser_NoTag;
@@ -20,9 +20,9 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   [ $self->substring_before( "!" ), $self->expect( "!" ) ];
+  [ $self->substring_before( "!" ), $self->expect( "!" ) ];
 }
 
 package main;
@@ -30,8 +30,8 @@ package main;
 my $parser = TestParser->new;
 
 is_deeply( $parser->from_string( "Hello, world!" ),
-   [ "Hello, world", "!" ],
-   '"Hello, world!"' );
+  [ "Hello, world", "!" ],
+  '"Hello, world!"' );
 is_deeply( $parser->{spaces},
   { },
   q("Hello, world!" spaces) );
@@ -46,8 +46,8 @@ is_deeply( $parser->{tags},
 }
 
 is_deeply( $parser->from_string( "!" ),
-   [ "", "!" ],
-   '"Hello, world!"' );
+  [ "", "!" ],
+  '"Hello, world!"' );
 is_deeply( $parser->{spaces},
   { },
   q("!" spaces) );
@@ -64,8 +64,8 @@ is_deeply( $parser->{tags},
 $parser = TestParser_NoTag->new;
 
 is_deeply( $parser->from_string( "Hello, world!" ),
-   [ "Hello, world", "!" ],
-   '"Hello, world!"' );
+  [ "Hello, world", "!" ],
+  '"Hello, world!"' );
 is_deeply( $parser->{spaces},
   { },
   q("Hello, world!" spaces) );

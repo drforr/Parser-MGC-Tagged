@@ -13,32 +13,32 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   main::is( $self->pos,
-      $positions[0],
-      '->pos before parsing' );
-   main::is_deeply( [ $self->where ],
-      $wheres[0],
-      '->where before parsing' );
+  main::is( $self->pos,
+    $positions[0],
+    '->pos before parsing' );
+  main::is_deeply( [ $self->where ],
+    $wheres[0],
+    '->where before parsing' );
 
-   $self->expect( "hello", [ Expect_1 => 1 ] );
-   main::is( $self->pos,
-      $positions[1],
-      '->pos during parsing' );
-   main::is_deeply( [ $self->where ],
-      $wheres[1],
-      '->where during parsing' );
+  $self->expect( "hello", [ Expect_1 => 1 ] );
+  main::is( $self->pos,
+    $positions[1],
+    '->pos during parsing' );
+  main::is_deeply( [ $self->where ],
+    $wheres[1],
+    '->where during parsing' );
 
-   $self->expect( qr/world/, [ Expect_2 => 1 ] );
-   main::is( $self->pos,
-      $positions[2],
-      '->pos after parsing' );
-   main::is_deeply( [ $self->where ],
-      $wheres[2],
-      '->where after parsing' );
+  $self->expect( qr/world/, [ Expect_2 => 1 ] );
+  main::is( $self->pos,
+    $positions[2],
+    '->pos after parsing' );
+  main::is_deeply( [ $self->where ],
+    $wheres[2],
+    '->where after parsing' );
 
-   return 1;
+  return 1;
 }
 
 package TestParser_NoTag;
@@ -46,32 +46,32 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   main::is( $self->pos,
-      $positions[0],
-      '->pos before parsing' );
-   main::is_deeply( [ $self->where ],
-      $wheres[0],
-      '->where before parsing' );
+  main::is( $self->pos,
+    $positions[0],
+    '->pos before parsing' );
+  main::is_deeply( [ $self->where ],
+    $wheres[0],
+    '->where before parsing' );
 
-   $self->expect( "hello" );
-   main::is( $self->pos,
-      $positions[1],
-      '->pos during parsing' );
-   main::is_deeply( [ $self->where ],
-      $wheres[1],
-      '->where during parsing' );
+  $self->expect( "hello" );
+  main::is( $self->pos,
+    $positions[1],
+    '->pos during parsing' );
+  main::is_deeply( [ $self->where ],
+    $wheres[1],
+    '->where during parsing' );
 
-   $self->expect( qr/world/ );
-   main::is( $self->pos,
-      $positions[2],
-      '->pos after parsing' );
-   main::is_deeply( [ $self->where ],
-      $wheres[2],
-      '->where after parsing' );
+  $self->expect( qr/world/ );
+  main::is( $self->pos,
+    $positions[2],
+    '->pos after parsing' );
+  main::is_deeply( [ $self->where ],
+    $wheres[2],
+    '->where after parsing' );
 
-   return 1;
+  return 1;
 }
 
 package main;
@@ -80,9 +80,9 @@ my $parser = TestParser->new;
 
 @positions = ( 0, 5, 11 );
 @wheres = (
-   [ 1, 0, "hello world" ],
-   [ 1, 5, "hello world" ],
-   [ 1, 11, "hello world" ], );
+  [ 1, 0, "hello world" ],
+  [ 1, 5, "hello world" ],
+  [ 1, 11, "hello world" ], );
 $parser->from_string( "hello world" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
@@ -98,9 +98,9 @@ is_deeply( $parser->{spaces},
 
 @positions = ( 0, 5, 11 );
 @wheres = (
-   [ 1, 0, "hello" ],
-   [ 1, 5, "hello" ],
-   [ 2, 5, "world" ], );
+  [ 1, 0, "hello" ],
+  [ 1, 5, "hello" ],
+  [ 2, 5, "world" ], );
 $parser->from_string( "hello\nworld" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },
@@ -118,9 +118,9 @@ $parser = TestParser_NoTag->new;
 
 @positions = ( 0, 5, 11 );
 @wheres = (
-   [ 1, 0, "hello world" ],
-   [ 1, 5, "hello world" ],
-   [ 1, 11, "hello world" ], );
+  [ 1, 0, "hello world" ],
+  [ 1, 5, "hello world" ],
+  [ 1, 11, "hello world" ], );
 $parser->from_string( "hello world" );
 is_deeply( $parser->{spaces},
   { 5 => 6 },

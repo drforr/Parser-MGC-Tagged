@@ -10,12 +10,12 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->list_of( ",", sub {
-      return $self->token_int( Int => 1 );
-   },
-   [ List_Of => 1 ] );
+  $self->list_of( ",", sub {
+     return $self->token_int( Int => 1 );
+  },
+  [ List_Of => 1 ] );
 }
 
 package TestParser_NoTag;
@@ -23,11 +23,11 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   $self->list_of( ",", sub {
-      return $self->token_int
-   } );
+  $self->list_of( ",", sub {
+    return $self->token_int
+  } );
 }
 
 package TestParser2;
@@ -35,18 +35,18 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   return [
-     $self->list_of( ",", sub {
-        return $self->token_int( Int => 1 );
-     },
-     [ List_Of => 1 ] ),
-     $self->list_of( ",", sub {
-        return $self->token_int( Int => 1 );
-     },
-     [ List_Of => 1 ] ),
-  ];
+  return [
+    $self->list_of( ",", sub {
+       return $self->token_int( Int => 1 );
+    },
+    [ List_Of => 1 ] ),
+    $self->list_of( ",", sub {
+       return $self->token_int( Int => 1 );
+    },
+    [ List_Of => 1 ] ),
+ ];
 }
 
 package main;

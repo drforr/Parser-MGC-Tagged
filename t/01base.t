@@ -10,12 +10,12 @@ use base qw( Parser::MGC::Tagged );
 
 sub parse
 {
-   my $self = shift;
+  my $self = shift;
 
-   # Some slight cheating here
-   pos( $self->{str} ) = length( $self->{str} );
+  # Some slight cheating here
+  pos( $self->{str} ) = length( $self->{str} );
 
-   return [ split ' ', $self->{str} ];
+  return [ split ' ', $self->{str} ];
 }
 
 package main;
