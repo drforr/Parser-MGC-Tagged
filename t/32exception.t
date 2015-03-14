@@ -27,9 +27,12 @@ my $value = $parser->from_string( "\t123" );
 
 is( $value, 123, '->from_string' );
 is_deeply( $parser->{spaces}, { 0 => 1 }, q("\t123" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 1, 4, Int => 1 ] ],
-  q("\t123" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("foo" tagged) );
+  is( $tagged->get_tag_at( 1, 'Int' ), 1, q("\t123" tag start) );
+  is( $tagged->get_tag_at( 3, 'Int' ), 1, q("\t123" tag end) );
+}
 #use YAML;die Dump $parser->{tags};
 
 ok( !eval { $parser->from_string( "\t123." ) }, 'Trailing input on string fails' );

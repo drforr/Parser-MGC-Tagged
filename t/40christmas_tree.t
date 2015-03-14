@@ -64,68 +64,68 @@ sub parse {
 
     # '5'
     # Alternation with no fallthrough
-    $self->any_of( sub { $self->token_int ( Int_9 => 1 ) }, [ Any_Of => 1 ] ),
+    $self->any_of( sub { $self->token_int ( Int_9 => 1 ) }, [ Any_Of_10 => 1 ] ),
 
     # 'fail'
     # Alternation with fallthrough ('fail' does not match token_int())
     $self->any_of(
-      sub { $self->token_int ( Int_10 => 1 ) },
-      sub { $self->token_string ( String_11 => 1 ) },
-      [ Any_Of => 1 ]
+      sub { $self->token_int ( Int_11 => 1 ) },
+      sub { $self->token_string ( String_12 => 1 ) },
+      [ Any_Of_13 => 1 ]
     ),
 
     # 'commit'
     # Alternation with fallthrough and commit
     $self->any_of(
-      sub { $self->token_int ( Int_12 => 1 ) },
+      sub { $self->token_int ( Int_14 => 1 ) },
       sub {
         $self->commit;
-        $self->token_string ( String_13 => 1 )
+        $self->token_string ( String_15 => 1 )
       },
-      [ Any_Of => 1 ]
+      [ Any_Of_16 => 1 ]
     ),
 
     # '6', '7'
     $self->list_of(
       ',',
-      sub { $self->token_int ( Int_14 => 1 ) },
-      [ List_Of => 1 ]
+      sub { $self->token_int ( Int_17 => 1 ) },
+      [ List_Of_18 => 1 ]
     ),
 
     # '8'
     # scope_of() calls expect() internally, so call it inside.
     $self->scope_of(
         '(',
-        sub { $self->expect( '8', [ Expect_15 => 1 ] ) },
+        sub { $self->expect( '8', [ Expect_19 => 1 ] ) },
         ')',
-      [ Scope_Of => 1 ]
+      [ Scope_Of_20 => 1 ]
     ),
 
     # '9', '10'
     $self->sequence_of(
-       sub { $self->token_int ( Int_16 => 1 ) },
-      [ Sequence_Of => 1 ]
+       sub { $self->token_int ( Int_21 => 1 ) },
+      [ Sequence_Of_22 => 1 ]
     ),
 
     # '' (pos() at 'a' but token_int() fails to match)
     # maybe() failing
-    $self->maybe( sub { $self->token_int ( Int_17 => 1 ) } ),
+    $self->maybe( sub { $self->token_int ( Int_23 => 1 ) } ),
 
     # 'a'
     # maybe() passing
-    $self->maybe( sub { $self->expect( 'a', [ Expect_18 => 1 ] ) } ),
+    $self->maybe( sub { $self->expect( 'a', [ Expect_24 => 1 ] ) } ),
 
     # 'b'
     # expect() on its own.
-    $self->expect( 'b', [ Expect_19 => 1 ] ),
+    $self->expect( 'b', [ Expect_25 => 1 ] ),
 
     # ''
     # maybe_expect() on its own failing
-    $self->maybe_expect( 'b', [ Maybe_Expect_20 => 1 ] ),
+    $self->maybe_expect( 'b', [ Maybe_Expect_21 => 1 ] ),
 
     # 'c'
     # maybe_expect() passing
-    $self->maybe_expect( 'c', [ Maybe_Expect_21 => 1 ] ),
+    $self->maybe_expect( 'c', [ Maybe_Expect_27 => 1 ] ),
   ]
 }
 
@@ -151,33 +151,62 @@ is_deeply(
 is_deeply( $parser->{spaces},
   { 1 => 2, 5 => 6, 9 => 10, 13 => 14, 22 => 23, 28 => 29, 36 => 37, 44 => 45, 46 => 47, 53 => 54, 62 => 63, 65 => 66, 67 => 68, 69 => 70, 71 => 72, 73 => 74, 75 => 76, 78 => 79, 80 => 81, 82 => 83  },
   q("$parse_me" spaces) );
-is_deeply( $parser->{tags},
-  [ [ 0, 1, Int_1 => 1 ],
-    [ 2, 5, Float_2 => 1 ],
-    [ 6, 9, Float_3 => 1 ],
-    [ 10, 13, Number_4 => 1 ],
-    [ 14, 22, String_5 => 1 ],
-    [ 23, 28, Ident_6 => 1 ],
-    [ 29, 36, Keyword_7 => 1 ],
-    [ 37, 44, Generic_Token_8 => 1 ],
-    [ 45, 46, Int_9 => 1 ],
-    [ 45, 46, Any_Of => 1 ],
-    [ 47, 53, String_11 => 1 ],
-    [ 47, 53, Any_Of => 1 ],
-    [ 54, 62, String_13 => 1 ],
-    [ 54, 62, Any_Of => 1 ],
-    [ 63, 64, Int_14 => 1 ],
-    [ 66, 67, Int_14 => 1 ],
-    [ 63, 67, List_Of => 1 ],
-    [ 70, 71, Expect_15 => 1 ],
-    [ 68, 73, Scope_Of => 1 ],
-    [ 74, 75, Int_16 => 1 ],
-    [ 76, 78, Int_16 => 1 ],
-    [ 74, 78, Sequence_Of => 1 ],
-    [ 79, 80, Expect_18 => 1 ],
-    [ 81, 82, Expect_19 => 1 ],
-    [ 83, 84, Maybe_Expect_21 => 1 ] ],
-  q("$parse_me" tags) );
+{
+  my $tagged = $parser->tagged;
+  isa_ok( $tagged, 'String::Tagged', q("foo" tagged) );
+  is( $tagged->get_tag_at(  0, 'Int_1' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at(  0, 'Int_1' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at(  2, 'Float_2' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at(  4, 'Float_2' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at(  6, 'Float_3' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at(  8, 'Float_3' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 10, 'Number_4' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 12, 'Number_4' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 14, 'String_5' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 20, 'String_5' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 23, 'Ident_6' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 27, 'Ident_6' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 29, 'Keyword_7' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 35, 'Keyword_7' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 37, 'Generic_Token_8' ), 1,
+      q(Christmas tree start) );
+  is( $tagged->get_tag_at( 43, 'Generic_Token_8' ), 1,
+      q(Christmas tree end) );
+  is( $tagged->get_tag_at( 45, 'Int_9' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 45, 'Int_9' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 45, 'Any_Of_10' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 45, 'Any_Of_10' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 47, 'String_12' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 52, 'String_12' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 47, 'Any_Of_13' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 52, 'Any_Of_13' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 54, 'String_15' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 61, 'String_15' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 54, 'Any_Of_16' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 61, 'Any_Of_16' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 63, 'Int_17' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 66, 'Int_17' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 63, 'List_Of_18' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 66, 'List_Of_18' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 70, 'Expect_19' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 70, 'Expect_19' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 68, 'Scope_Of_20' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 72, 'Scope_Of_20' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 74, 'Int_21' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 74, 'Int_21' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 76, 'Int_21' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 77, 'Int_21' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 74, 'Sequence_Of_22' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 77, 'Sequence_Of_22' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 79, 'Expect_24' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 79, 'Expect_24' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 81, 'Expect_25' ), 1, q(Christmas tree start) );
+  is( $tagged->get_tag_at( 81, 'Expect_25' ), 1, q(Christmas tree end) );
+  is( $tagged->get_tag_at( 83, 'Maybe_Expect_27' ), 1,
+      q(Christmas tree start) );
+  is( $tagged->get_tag_at( 83, 'Maybe_Expect_27' ), 1, 
+     q(Christmas tree end) );
+}
 is_deeply( $parser->{delimiters},
   [ [ 68, 69 ],
     [ 72, 73 ],
